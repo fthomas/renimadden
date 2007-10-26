@@ -18,6 +18,8 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <stdexcept>
+
 #include "board.h"
 
 namespace ReniMadden {
@@ -51,8 +53,52 @@ namespace ReniMadden {
     return *this;
   }
 
-  int Board::getDice() const {
+  unsigned Board::getDice() const {
     return dice;
+  }
+
+  Board& Board::setDice(unsigned value) {
+    if (value < 1 || value > 6)
+      throw std::out_of_range("value for Board::setDice() is out of range");
+    else
+      dice = value;
+
+    return *this;
+  }
+
+  bool Board::isWinner(playerId player) const {
+    // Does the player has off-board figures?
+    if (figuresOffBoard[player] > 0)
+      return false;
+
+    // Does the player has figures on-board?
+    for (int i = 0; i < 46; i++) {
+      if (figuresOnBoard[player][i] > 0)
+        return false;
+    }
+
+    // If there are no remaining off-board and on-board figures they all must
+    // be in the bar. So throw an exception if the bar is not fully stuffed.
+    for (int j = 0; j < 4; j++) {
+      if (figuresOnBar[player][j] == 0)
+        throw std::logic_error("bar has empty fields although there are no " 
+          "remaining figures off- and on-board");
+    }
+
+    return true;
+  }
+
+  bool Board::hasWinner() const {
+    if (this->isWinner(PLAYER1))
+      return true;
+    if (this->isWinner(PLAYER2))
+      return true;
+    if (this->isWinner(PLAYER3))
+      return true;
+    if (this->isWinner(PLAYER4))
+      return true;
+
+    return false;
   }
 
 } // namespace ReniMadden

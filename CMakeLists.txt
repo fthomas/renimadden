@@ -1,4 +1,5 @@
 PROJECT(ReniMadden)
+
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 
 SET(renimadden_SOURCES
@@ -8,6 +9,7 @@ SET(renimadden_SOURCES
 
 SET(renimadden_HEADERS
     board.h
+    playerid.h
 )
 
 ADD_EXECUTABLE(renimadden ${renimadden_SOURCES})

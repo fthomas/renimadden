@@ -19,20 +19,25 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "playerid.h"
+
 namespace ReniMadden {
 
   class Board {
     protected:
-      int dice;
-      int figuresOffBoard[4];
-      int figuresOnBoard[4][46];
-      int figuresOnBar[4][4];
+      unsigned dice;
+      unsigned figuresOffBoard[4];
+      unsigned figuresOnBoard[4][46];
+      unsigned figuresOnBar[4][4];
 
     public:
       Board();
       Board& reset();
       Board& rollDice();
-      int getDice() const;
+      unsigned getDice() const;
+      Board& setDice(unsigned value);
+      bool isWinner(playerId player) const;
+      bool hasWinner() const;
   };
 
 } // namespace ReniMadden

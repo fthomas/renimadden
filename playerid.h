@@ -16,27 +16,15 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BOARD_H
-#define BOARD_H
-
 namespace ReniMadden {
 
-  class Board {
-    protected:
-      int dice;
-      int figuresOffBoard[4];
-      int figuresOnBoard[4][46];
-      int figuresOnBar[4][4];
-
-    public:
-      Board();
-      Board& reset();
-      Board& rollDice();
-      int getDice() const;
+  enum playerId {
+    PLAYER1,
+    PLAYER2,
+    PLAYER3,
+    PLAYER4
   };
 
 } // namespace ReniMadden
-
-#endif // BOARD_H
 
 // vim: set ts=2 sw=2:

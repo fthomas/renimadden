@@ -16,6 +16,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <cstdlib>
+#include <ctime>
 #include "board.h"
 
 namespace ReniMadden {
@@ -26,8 +28,7 @@ namespace ReniMadden {
 
   Board& Board::reset() {
     // Reset dice.
-    dice[0] = 0;
-    dice[1] = 0;
+    dice = 0;
 
     // Reset the count of figures that are off-board and empty all fields on
     // the board and on the bars.
@@ -42,6 +43,16 @@ namespace ReniMadden {
     }
 
     return *this;
+  }
+
+  Board& Board::rollDice() {
+    std::srand((unsigned)std::time(NULL)+(unsigned)std::clock());
+    dice = (double(std::rand())/RAND_MAX)*6+1;
+    return *this;
+  }
+
+  int Board::getDice() const {
+    return dice;
   }
 
 } // namespace ReniMadden

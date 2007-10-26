@@ -16,25 +16,34 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef BOARD_H
-#define BOARD_H
+#include "board.h"
 
 namespace ReniMadden {
 
-  class Board {
-    protected:
-      int dice[2];
-      int figuresOffBoard[4];
-      int figuresOnBoard[4][46];
-      int figuresOnBar[4][4];
+  Board::Board() {
+    this->reset();
+  }
 
-    public:
-      Board();
-      Board& reset();
-  };
+  Board& Board::reset() {
+    // Reset dice.
+    dice[0] = 0;
+    dice[1] = 0;
+
+    // Reset the count of figures that are off-board and empty all fields on
+    // the board and on the bars.
+    for (int i = 0; i < 4; i++) {
+      figuresOffBoard[i] = 4;
+
+      for (int j = 0; j < 46; j++)
+        figuresOnBoard[i][j] = 0;
+
+      for (int k = 0; k < 4; k++)
+        figuresOnBar[i][k] = 0;
+    }
+
+    return *this;
+  }
 
 } // namespace ReniMadden
-
-#endif // BOARD_H
 
 // vim: set ts=2 sw=2:

@@ -59,7 +59,7 @@ namespace ReniMadden {
 
   Board& Board::setDice(unsigned value) {
     if (value < 1 || value > 6)
-      throw std::out_of_range("value for Board::setDice() is out of range");
+      throw std::out_of_range("Board::setDice(): dice value is out of range");
     else
       dice = value;
 
@@ -81,8 +81,8 @@ namespace ReniMadden {
     // be in the bar. So throw an exception if the bar is not fully stuffed.
     for (int j = 0; j < 4; j++) {
       if (figuresOnBar[player][j] == 0)
-        throw std::logic_error("bar has empty fields although there are no " 
-          "remaining figures off- and on-board");
+        throw std::logic_error("Board::isWinner(): bar has empty fields "
+          "although there are no remaining figures off- and on-board");
     }
 
     return true;

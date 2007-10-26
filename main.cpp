@@ -16,8 +16,8 @@ int main(void) {
   cout << board2->rollDice().getDice() << endl;
   for (int i=0; i < 40000; i++) board1.reset();
   cout << board3.rollDice().getDice() << endl;
-  board3.setDice(1);
-  cout << board3.hasWinner() << endl;
+  board3.setDice(3);
+  cout << "hat jemand gewonnen: " << board3.hasWinner() << endl;
   return 0;
 }
 

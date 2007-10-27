@@ -16,6 +16,9 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef PLAYERID_H
+#define PLAYERID_H
+
 namespace ReniMadden {
 
   enum playerId {
@@ -26,5 +29,7 @@ namespace ReniMadden {
   };
 
 } // namespace ReniMadden
+
+#endif // PLAYERID_H
 
 // vim: set ts=2 sw=2:

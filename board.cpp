@@ -18,6 +18,7 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <list>
 #include <stdexcept>
 
 #include "board.h"
@@ -25,7 +26,7 @@
 namespace ReniMadden {
 
   Board::Board() {
-    this->reset();
+    reset();
   }
 
   Board& Board::reset() {
@@ -37,11 +38,8 @@ namespace ReniMadden {
     for (int i = 0; i < 4; i++) {
       figuresOffBoard[i] = 4;
 
-      for (int j = 0; j < 46; j++)
+      for (int j = 0; j < 50; j++)
         figuresOnBoard[i][j] = 0;
-
-      for (int k = 0; k < 4; k++)
-        figuresOnBar[i][k] = 0;
     }
 
     return *this;
@@ -57,7 +55,7 @@ namespace ReniMadden {
     return dice;
   }
 
-  Board& Board::setDice(unsigned value) {
+  Board& Board::setDice(const unsigned value) {
     if (value < 1 || value > 6)
       throw std::out_of_range("Board::setDice(): dice value is out of range");
     else
@@ -66,12 +64,22 @@ namespace ReniMadden {
     return *this;
   }
 
-  bool Board::isWinner(playerId player) const {
-    // Does the player has off-board figures?
+  unsigned Board::getFiguresOnField(const playerId player,
+    const unsigned field) const {
+    return figuresOnBoard[player][field];
+  }
+
+  Board& Board::setFiguresOnField(const playerId player, const unsigned field,
+    const int figures) {
+    return *this;
+  }
+
+  bool Board::isWinner(const playerId player) const {
+    // Has the player off-board figures?
     if (figuresOffBoard[player] > 0)
       return false;
 
-    // Does the player has figures on-board?
+    // Has the player figures on-board?
     for (int i = 0; i < 46; i++) {
       if (figuresOnBoard[player][i] > 0)
         return false;
@@ -79,8 +87,8 @@ namespace ReniMadden {
 
     // If there are no remaining off-board and on-board figures they all must
     // be in the bar. So throw an exception if the bar is not fully stuffed.
-    for (int j = 0; j < 4; j++) {
-      if (figuresOnBar[player][j] == 0)
+    for (int j = 46; j < 50; j++) {
+      if (figuresOnBoard[player][j] == 0)
         throw std::logic_error("Board::isWinner(): bar has empty fields "
           "although there are no remaining figures off- and on-board");
     }
@@ -89,16 +97,34 @@ namespace ReniMadden {
   }
 
   bool Board::hasWinner() const {
-    if (this->isWinner(PLAYER1))
-      return true;
-    if (this->isWinner(PLAYER2))
-      return true;
-    if (this->isWinner(PLAYER3))
-      return true;
-    if (this->isWinner(PLAYER4))
-      return true;
-
+    for (int i = 0; i < 4; i++) {
+      if (this->isWinner((playerId)i))
+        return true;
+    }
     return false;
+  }
+
+  std::list<Move>& Board::getPossibleMoves(const playerId player) const {
+    /*
+    if (dice == 0)
+      throw std::logic_error("Board::getPossibleMoves(): dice is still set "
+        "to zero, roll it first");
+
+    std::list<Move>* possibleMoves = new std::list<Move>;
+
+    if (getFiguresOnField(player, 0) > 0 && figuresOffBoard[player] > 0) {
+      if (getFiguresOnField(player, dice) > 0) {
+        if (getFiguresOnField(player, dice+1) > 0)
+          possibleMoves->push_back(Move(0, dice+2));
+        else
+          possibleMoves->push_back(Move(0, dice+1));
+      }
+      else
+        possibleMoves->push_back(Move(0, dice));
+    }
+
+    return *possibleMoves;
+    */
   }
 
 } // namespace ReniMadden

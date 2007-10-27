@@ -19,6 +19,9 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include <list>
+
+#include "move.h"
 #include "playerid.h"
 
 namespace ReniMadden {
@@ -27,17 +30,28 @@ namespace ReniMadden {
     protected:
       unsigned dice;
       unsigned figuresOffBoard[4];
-      unsigned figuresOnBoard[4][46];
-      unsigned figuresOnBar[4][4];
+
+      // The first 46 fields are shared among all players and the last four
+      // fields correspond to the bar of each player and are 'private'.
+      unsigned figuresOnBoard[4][50];
 
     public:
       Board();
       Board& reset();
+
       Board& rollDice();
       unsigned getDice() const;
-      Board& setDice(unsigned value);
-      bool isWinner(playerId player) const;
+      Board& setDice(const unsigned value);
+
+      unsigned getFiguresOnField(const playerId player,
+        const unsigned field) const;
+      Board& setFiguresOnField(const playerId player, const unsigned field,
+        const int figures);
+
+      bool isWinner(const playerId player) const;
       bool hasWinner() const;
+
+      std::list<Move>& getPossibleMoves(const playerId player) const;
   };
 
 } // namespace ReniMadden

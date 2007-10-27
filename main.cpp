@@ -1,23 +1,23 @@
-#include <iostream>
+//#include "board.h"
+//#include "playerid.h"
+#include "move.h"
+
 #include <ctime>
-#include "board.h"
+#include <iostream>
 
 using namespace std;
 using namespace ReniMadden;
 
-int main(void) {
-  Board board1, board3;
-  Board* board2 = new Board;
+int main(int argc, char* argv[]) {
 
-  cout << board1.rollDice().getDice() << endl;
+/*  Board board1 = Board;
   board1.reset();
-  for (int i=0; i < 40000; i++) board1.reset();
+  board1.rollDice();
+  board1.getPossibleMoves(PLAYER1);*/
 
-  cout << board2->rollDice().getDice() << endl;
-  for (int i=0; i < 40000; i++) board1.reset();
-  cout << board3.rollDice().getDice() << endl;
-  board3.setDice(3);
-  cout << "hat jemand gewonnen: " << board3.hasWinner() << endl;
+  Move m1  = Move(1, 4);
+  cout << m1;
+
   return 0;
 }
 

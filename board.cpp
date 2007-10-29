@@ -51,26 +51,29 @@ namespace ReniMadden {
     return *this;
   }
 
-  unsigned Board::getDice() const {
+  int Board::getDice() const {
     return dice;
   }
 
-  Board& Board::setDice(const unsigned value) {
+  Board& Board::setDice(const int value) {
     if (value < 1 || value > 6)
       throw std::out_of_range("Board::setDice(): dice value is out of range");
     else
       dice = value;
-
     return *this;
   }
 
-  unsigned Board::getFiguresOnField(const playerId player,
-    const unsigned field) const {
+  int Board::getFiguresOffBoard(const playerId player) const {
+    return figuresOffBoard[player];
+  }
+
+  int Board::getFiguresOnField(const playerId player, const int field) const {
     return figuresOnBoard[player][field];
   }
 
-  Board& Board::setFiguresOnField(const playerId player, const unsigned field,
+  Board& Board::setFiguresOnField(const playerId player, const int field,
     const int figures) {
+    figuresOnBoard[player][field] += figures;
     return *this;
   }
 
@@ -112,22 +115,38 @@ namespace ReniMadden {
       throw std::logic_error("Board::getPossibleMoves(): dice is still set "
         "to zero, roll it first");
 
+    // This list will hold all possible Moves for player and a pointer to it
+    // will be the return value of this method.
     std::list<Move>* possibleMoves = new std::list<Move>;
 
-/*
-    if (getFiguresOnField(player, 0) > 0 && figuresOffBoard[player] > 0) {
-      if (getFiguresOnField(player, dice) > 0) {
-        if (getFiguresOnField(player, dice+1) > 0)
-          possibleMoves->push_back(Move(0, dice+2));
-        else
-          possibleMoves->push_back(Move(0, dice+1));
+    // Figures that got from off-board to on-board must move away from the
+    // first field on the board as long as there are other figures off-board.
+    // If the field where this figure could move is occupied by another own
+    // figure it is allowed that it moves one field further. If this field is
+    // also occupied it may move another field further.
+    if (getFiguresOnField(player, 0) > 0) {
+      if (getFiguresOffBoard(player) > 0) {
+        if (getFiguresOnField(player, dice) == 0)
+          possibleMoves->push_back(Move(0, dice));
+        else if (getFiguresOnField(player, dice + 1) == 0)
+          possibleMoves->push_back(Move(0, dice + 1));
+        else if (getFiguresOnField(player, dice + 2) == 0)
+          possibleMoves->push_back(Move(0, dice + 2));
+
+        return *possibleMoves;
       }
-      else
+      else if (getFiguresOnField(player, dice) == 0)
         possibleMoves->push_back(Move(0, dice));
     }
 
+    for (int i = 1; i < 40; i++) {
+      if (getFiguresOnField(player, i) > 0) {
+        if (getFiguresOnField(player, i + dice) == 0)
+          possibleMoves->push_back(Move(i, i + dice));
+      }
+    }
+
     return *possibleMoves;
-    */
   }
 
 } // namespace ReniMadden

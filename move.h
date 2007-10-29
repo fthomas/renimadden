@@ -26,8 +26,8 @@ namespace ReniMadden {
 
   class Move {
     private:
-      unsigned start;
-      unsigned end;
+      int start;
+      int end;
 
     public:
       inline Move() {
@@ -35,7 +35,7 @@ namespace ReniMadden {
         end = 0;
       }
 
-      inline Move(const unsigned _start, const unsigned _end) {
+      inline Move(const int _start, const int _end) {
         if (_start >= _end)
           throw std::logic_error("Move::Move(): start is greater than end");
 
@@ -47,11 +47,11 @@ namespace ReniMadden {
         end = _end;
       }
 
-      inline unsigned getStartField() const {
+      inline int getStartField() const {
         return start;
       }
 
-      inline unsigned getEndField() const {
+      inline int getEndField() const {
         return end;
       }
   };

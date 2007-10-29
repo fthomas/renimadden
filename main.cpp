@@ -15,8 +15,11 @@ int main(int argc, char* argv[]) {
   board1.rollDice();
   board1.getPossibleMoves(PLAYER1);*/
 
+ unsigned t = 5;
+
   Move m1  = Move(1, 4);
   cout << m1;
+  cout << t -6;
 
   return 0;
 }

@@ -28,24 +28,26 @@ namespace ReniMadden {
 
   class Board {
     protected:
-      unsigned dice;
-      unsigned figuresOffBoard[4];
+      int dice;
+      int figuresOffBoard[4];
 
       // The first 46 fields are shared among all players and the last four
       // fields correspond to the bar of each player and are 'private'.
-      unsigned figuresOnBoard[4][50];
+      int figuresOnBoard[4][50];
 
     public:
       Board();
       Board& reset();
 
       Board& rollDice();
-      unsigned getDice() const;
-      Board& setDice(const unsigned value);
+      int getDice() const;
+      Board& setDice(const int value);
 
-      unsigned getFiguresOnField(const playerId player,
-        const unsigned field) const;
-      Board& setFiguresOnField(const playerId player, const unsigned field,
+      int getFiguresOffBoard(const playerId player) const;
+      Board& setFiguresOffBoard(const playerId player, const int figures);
+
+      int getFiguresOnField(const playerId player, const int field) const;
+      Board& setFiguresOnField(const playerId player, const int field,
         const int figures);
 
       bool isWinner(const playerId player) const;

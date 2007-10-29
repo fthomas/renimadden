@@ -67,13 +67,18 @@ namespace ReniMadden {
     return figuresOffBoard[player];
   }
 
+  Board& Board::setFiguresOffBoard(const playerId player, const int figures) {
+    figuresOffBoard[player] = figures;
+    return *this;
+  }
+
   int Board::getFiguresOnField(const playerId player, const int field) const {
     return figuresOnBoard[player][field];
   }
 
   Board& Board::setFiguresOnField(const playerId player, const int field,
     const int figures) {
-    figuresOnBoard[player][field] += figures;
+    figuresOnBoard[player][field] = figures;
     return *this;
   }
 

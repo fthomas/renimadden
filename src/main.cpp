@@ -11,15 +11,21 @@ using namespace ReniMadden;
 
 int main(int argc, char* argv[]) {
 
-  Board board = Board;
+  Board board = Board();
 
   board.setFiguresOffBoard(PLAYER1, 3);
   board.setFiguresOnField(PLAYER1, 0, 1);
   board.setDice(6);
 
-  board.getPossibleMoves(PLAYER1);
+  std::list<Move> g =  board.getPossibleMoves(PLAYER1);
 
-  cout << "dsf" << endl;
+  cout << g.front() << endl;
+
+  board.setFiguresOffBoard(PLAYER1, 2);
+  board.setFiguresOnField(PLAYER1, 6, 1);
+
+  cout << board.getPossibleMoves(PLAYER1).front() << endl;
+  cout << (Move(1,2) == Move(1,2)) << endl;
 
   return 0;
 }

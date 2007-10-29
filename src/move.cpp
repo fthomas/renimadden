@@ -22,6 +22,11 @@
 
 namespace ReniMadden {
 
+  bool operator==(const Move& a, const Move& b) {
+    return (a.getStartField() == b.getStartField())
+      && (a.getEndField() == b.getEndField());
+  }
+
   std::ostream& operator<<(std::ostream& os, const Move& move) {
     return os << "Move(" << move.getStartField() << ", "
                          << move.getEndField() << ")";

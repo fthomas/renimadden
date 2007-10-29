@@ -56,6 +56,8 @@ namespace ReniMadden {
       }
   };
 
+  bool operator==(const Move& a, const Move& b);
+
   std::ostream& operator<<(std::ostream& os, const Move& move);
 
 } // namespace ReniMadden

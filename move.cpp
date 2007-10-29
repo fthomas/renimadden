@@ -24,7 +24,7 @@ namespace ReniMadden {
 
   std::ostream& operator<<(std::ostream& os, const Move& move) {
     return os << "Move(" << move.getStartField() << ", "
-                         << move.getStopField() << ")";
+                         << move.getEndField() << ")";
   }
 
 } // namespace ReniMadden

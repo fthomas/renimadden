@@ -27,32 +27,32 @@ namespace ReniMadden {
   class Move {
     private:
       unsigned start;
-      unsigned stop;
+      unsigned end;
 
     public:
       inline Move() {
         start = 0;
-        stop = 0;
+        end = 0;
       }
 
-      inline Move(const unsigned _start, const unsigned _stop) {
-        if (_start >= _stop)
-          throw std::logic_error("Move::Move(): start is greater than stop");
+      inline Move(const unsigned _start, const unsigned _end) {
+        if (_start >= _end)
+          throw std::logic_error("Move::Move(): start is greater than end");
 
-        if (_start < 0 || _stop > 49)
-          throw std::out_of_range("Move::Move(): start or stop are out of "
-            "the valid range");
+        if (_start < 0 || _end > 49)
+          throw std::out_of_range("Move::Move(): start or end are out of the "
+            "valid range");
 
         start = _start;
-        stop = _stop;
+        end = _end;
       }
 
       inline unsigned getStartField() const {
         return start;
       }
 
-      inline unsigned getStopField() const {
-        return stop;
+      inline unsigned getEndField() const {
+        return end;
       }
   };
 

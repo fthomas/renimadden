@@ -105,13 +105,16 @@ namespace ReniMadden {
   }
 
   std::list<Move>& Board::getPossibleMoves(const playerId player) const {
-    /*
+    // Check if the dice was rolled before and throw a logic error if it
+    // wasn't since there are no possible moves then (if you don't count moves
+    // where start == end).
     if (dice == 0)
       throw std::logic_error("Board::getPossibleMoves(): dice is still set "
         "to zero, roll it first");
 
     std::list<Move>* possibleMoves = new std::list<Move>;
 
+/*
     if (getFiguresOnField(player, 0) > 0 && figuresOffBoard[player] > 0) {
       if (getFiguresOnField(player, dice) > 0) {
         if (getFiguresOnField(player, dice+1) > 0)

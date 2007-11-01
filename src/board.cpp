@@ -67,8 +67,21 @@ namespace ReniMadden {
     return figuresOffBoard[player];
   }
 
+  Board& Board::addFiguresOffBoard(const playerId player, const int figures) {
+    if ((figuresOffBoard[player] + figures) < 0)
+      throw std::logic_error("Board::addFiguresOffBoard(): number of figures "
+        "off-board will be negative");
+    else
+      figuresOffBoard[player] += figures;
+    return *this;
+  }
+
   Board& Board::setFiguresOffBoard(const playerId player, const int figures) {
-    figuresOffBoard[player] = figures;
+    if (figures < 0)
+      throw std::out_of_range("Board::setFiguresOffBoard(): number of figures "
+        "off-board is negative");
+    else
+      figuresOffBoard[player] = figures;
     return *this;
   }
 
@@ -76,9 +89,23 @@ namespace ReniMadden {
     return figuresOnBoard[player][field];
   }
 
+  Board& Board::addFiguresOnField(const playerId player, const int field,
+    const int figures) {
+    if ((figuresOnBoard[player][field] + figures) < 0)
+      throw std::logic_error("Board::addFiguresOnField(): number of figures "
+        "on field will be negative");
+    else
+      figuresOnBoard[player][field] += figures;
+    return *this;
+  }
+
   Board& Board::setFiguresOnField(const playerId player, const int field,
     const int figures) {
-    figuresOnBoard[player][field] = figures;
+    if (figures < 0)
+      throw std::out_of_range("Board::setFiguresOnField(): number of figures "
+        "on field is negative");
+    else
+      figuresOnBoard[player][field] = figures;
     return *this;
   }
 

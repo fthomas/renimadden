@@ -44,9 +44,12 @@ namespace ReniMadden {
       Board& setDice(const int value);
 
       int getFiguresOffBoard(const playerId player) const;
+      Board& addFiguresOffBoard(const playerId player, const int figures);
       Board& setFiguresOffBoard(const playerId player, const int figures);
 
       int getFiguresOnField(const playerId player, const int field) const;
+      Board& addFiguresOnField(const playerId player, const inf field,
+        const inf figures);
       Board& setFiguresOnField(const playerId player, const int field,
         const int figures);
 

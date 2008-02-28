@@ -22,7 +22,9 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include <board.cpp>
+#include "board.cpp"
+#include "move.cpp"
+#include "playerid.h"
 
 using namespace std;
 using namespace ReniMadden;
@@ -31,6 +33,7 @@ class BoardTest : public CppUnit::TestFixture {
 
   CPPUNIT_TEST_SUITE(BoardTest);
   CPPUNIT_TEST(testDice);
+  CPPUNIT_TEST(testMovesBar);
   CPPUNIT_TEST_SUITE_END();
 
   private:
@@ -56,6 +59,33 @@ class BoardTest : public CppUnit::TestFixture {
         board->rollDice();
         CPPUNIT_ASSERT( board->getDice() >= 1 && board->getDice() <= 6 );
       }
+    }
+
+    void testMovesBar() {
+      board->reset();
+      board->setFiguresOnField(PLAYER1, 46, 1);
+      board->setDice(2);
+      list<Move> pm = board->getPossibleMoves(PLAYER1);
+      CPPUNIT_ASSERT( pm.front() == Move(46, 48) );
+
+      board->reset();
+      board->setFiguresOnField(PLAYER1, 44, 1);
+      board->setFiguresOnField(PLAYER1, 46, 1);
+      board->setDice(3);
+      pm = board->getPossibleMoves(PLAYER1);
+      CPPUNIT_ASSERT( pm.size() == 1 );
+      CPPUNIT_ASSERT( pm.front() == Move(46, 49) );
+
+      board->reset();
+      board->setFiguresOnField(PLAYER1, 44, 1);
+      board->setFiguresOnField(PLAYER1, 47, 1);
+      board->setDice(2);
+      pm = board->getPossibleMoves(PLAYER1);
+      CPPUNIT_ASSERT( pm.size() == 2 );
+      CPPUNIT_ASSERT( pm.front() == Move(44, 46) );
+      pm.pop_front();
+      CPPUNIT_ASSERT( pm.front() == Move(47, 49) );
+
     }
 };
 

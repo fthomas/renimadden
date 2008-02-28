@@ -13,19 +13,17 @@ int main(int argc, char* argv[]) {
 
   Board board = Board();
 
-  board.setFiguresOffBoard(PLAYER1, 3);
-  board.setFiguresOnField(PLAYER1, 0, 1);
-  board.setDice(6);
+  board.setFiguresOffBoard(PLAYER1, 0);
+  board.setFiguresOnField(PLAYER1, 46, 1);
+  board.setFiguresOnField(PLAYER1, 47, 1);
+  board.setFiguresOnField(PLAYER1, 23, 1);
+  board.setFiguresOnField(PLAYER1, 49, 1);
+  board.setDice(2);
 
-  std::list<Move> g =  board.getPossibleMoves(PLAYER1);
-
-  cout << g.front() << endl;
-
-  board.setFiguresOffBoard(PLAYER1, 2);
-  board.setFiguresOnField(PLAYER1, 6, 1);
-
-  cout << board.getPossibleMoves(PLAYER1).front() << endl;
-  cout << (Move(1,2) == Move(1,2)) << endl;
+  list<Move> pm = board.getPossibleMoves(PLAYER1);
+  list<Move>::const_iterator it;
+  for (it = pm.begin(); it != pm.end(); ++it)
+    cout << *it << endl;
 
   return 0;
 }

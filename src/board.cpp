@@ -1,6 +1,6 @@
 /*
    ReniMadden - Mensch ärgere dich nicht for KDE
-   Copyright © 2007 Frank S. Thomas <frank@thomas-alfeld.de>
+   Copyright © 2007-2008 Frank S. Thomas <frank@thomas-alfeld.de>
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -171,10 +171,32 @@ namespace ReniMadden {
         possibleMoves->push_back(Move(0, dice));
     }
 
-    for (int i = 1; i < 40; i++) {
+    for (int i = 1; i < 41; i++) {
       if (getFiguresOnField(player, i) > 0) {
         if (getFiguresOnField(player, i + dice) == 0)
           possibleMoves->push_back(Move(i, i + dice));
+      }
+    }
+
+    // Check possible moves right in front of the bar.
+    for (int j = 41; j < 49; j++) {
+      if (j + dice > 49)
+        break;
+
+      if (getFiguresOnField(player, j) > 0) {
+        bool can_move = true;
+        
+        // Moves in or into the bar are only allowed if no other figure is on
+        // a field in front of the move's destination. Or to put it another
+        // way, you can't jump over figures that are in the bar.
+        int lower_limit = (j > 45) ? j: 45;
+        for (int k = j + dice; k > lower_limit; k--) {
+          if (getFiguresOnField(player, k) != 0)
+            can_move = false;
+        }
+
+        if (getFiguresOnField(player, j + dice) == 0 && can_move)
+          possibleMoves->push_back(Move(j, j + dice));
       }
     }
 

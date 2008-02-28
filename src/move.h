@@ -39,7 +39,7 @@ namespace ReniMadden {
         if (_start >= _end)
           throw std::logic_error("Move::Move(): start is greater than end");
 
-        if (_start < 0 || _end > 49)
+        if (_start < 0 || _end > 51)
           throw std::out_of_range("Move::Move(): start or end are out of the "
             "valid range");
 

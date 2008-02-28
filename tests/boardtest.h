@@ -33,7 +33,9 @@ class BoardTest : public CppUnit::TestFixture {
 
   CPPUNIT_TEST_SUITE(BoardTest);
   CPPUNIT_TEST(testDice);
+  CPPUNIT_TEST(testMovesBoard);
   CPPUNIT_TEST(testMovesBar);
+  CPPUNIT_TEST(testGetOpponentField); 
   CPPUNIT_TEST_SUITE_END();
 
   private:
@@ -61,31 +63,55 @@ class BoardTest : public CppUnit::TestFixture {
       }
     }
 
+    void testMovesBoard() {
+      board->reset();
+      board->setFiguresOnField(PLAYER1, 20, 1);
+      board->setFiguresOnField(PLAYER1, 10, 1);
+      board->setDice(4);
+      CPPUNIT_ASSERT( board->isMoveAllowed(PLAYER1, Move(20, 24)) == true );
+      CPPUNIT_ASSERT( board->isMoveAllowed(PLAYER1, Move(20, 25)) == false );
+    }
+
     void testMovesBar() {
       board->reset();
-      board->setFiguresOnField(PLAYER1, 46, 1);
+      board->setFiguresOnField(PLAYER1, 48, 1);
       board->setDice(2);
       list<Move> pm = board->getPossibleMoves(PLAYER1);
-      CPPUNIT_ASSERT( pm.front() == Move(46, 48) );
+      CPPUNIT_ASSERT( pm.front() == Move(48, 50) );
 
       board->reset();
-      board->setFiguresOnField(PLAYER1, 44, 1);
       board->setFiguresOnField(PLAYER1, 46, 1);
+      board->setFiguresOnField(PLAYER1, 48, 1);
       board->setDice(3);
       pm = board->getPossibleMoves(PLAYER1);
       CPPUNIT_ASSERT( pm.size() == 1 );
-      CPPUNIT_ASSERT( pm.front() == Move(46, 49) );
+      CPPUNIT_ASSERT( board->canMove(PLAYER1) == true );
+      CPPUNIT_ASSERT( pm.front() == Move(48, 51) );
 
       board->reset();
-      board->setFiguresOnField(PLAYER1, 44, 1);
-      board->setFiguresOnField(PLAYER1, 47, 1);
+      board->setFiguresOnField(PLAYER1, 46, 1);
+      board->setFiguresOnField(PLAYER1, 49, 1);
       board->setDice(2);
       pm = board->getPossibleMoves(PLAYER1);
       CPPUNIT_ASSERT( pm.size() == 2 );
-      CPPUNIT_ASSERT( pm.front() == Move(44, 46) );
+      CPPUNIT_ASSERT( board->canMove(PLAYER1) == true );
+      CPPUNIT_ASSERT( pm.front() == Move(46, 48) );
       pm.pop_front();
-      CPPUNIT_ASSERT( pm.front() == Move(47, 49) );
+      CPPUNIT_ASSERT( pm.front() == Move(49, 51) );
+    }
 
+    void testGetOpponentField() {
+      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER1, PLAYER2, 1) == 37 );
+      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER1, PLAYER3, 1) == 25 );
+      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER1, PLAYER4, 1) == 13 );
+      
+      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER2, PLAYER1, 1) == 13 );
+      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER3, PLAYER2, 1) == 13 );
+      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER4, PLAYER3, 1) == 13 );
+      
+      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER4, PLAYER1, 7) == 43 );
+      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER4, PLAYER2, 8) == 32 );
+      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER4, PLAYER3, 9) == 21 );
     }
 };
 

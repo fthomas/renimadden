@@ -1,6 +1,6 @@
 /*
    ReniMadden - Mensch ärgere dich nicht for KDE
-   Copyright © 2007 Frank S. Thomas <frank@thomas-alfeld.de>
+   Copyright © 2007-2008 Frank S. Thomas <frank@thomas-alfeld.de>
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,9 +31,9 @@ namespace ReniMadden {
       int dice;
       int figuresOffBoard[4];
 
-      // The first 46 fields are shared among all players and the last four
+      // The first 48 fields are shared among all players and the last four
       // fields correspond to the bar of each player and are 'private'.
-      int figuresOnBoard[4][50];
+      int figuresOnBoard[4][52];
 
     public:
       Board();
@@ -53,10 +53,16 @@ namespace ReniMadden {
       Board& setFiguresOnField(const playerId player, const int field,
         const int figures);
 
+      static int getOpponentField(const playerId player,
+        const playerId opponent, const int field);
+
       bool isWinner(const playerId player) const;
       bool hasWinner() const;
 
       std::list<Move>& getPossibleMoves(const playerId player) const;
+      bool canMove(const playerId player) const;
+      bool isMoveAllowed(const playerId player, const Move& move) const;
+      void move(const playerId player, const Move& move);
   };
 
 } // namespace ReniMadden

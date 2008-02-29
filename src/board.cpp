@@ -47,7 +47,7 @@ namespace ReniMadden {
 
   Board& Board::rollDice() {
     std::srand((unsigned)std::time(NULL)+(unsigned)std::clock());
-    dice = (double(std::rand())/RAND_MAX)*6+1;
+    setDice(double(std::rand()) / RAND_MAX * 6.0 + 1.0);
     return *this;
   }
 
@@ -227,9 +227,23 @@ namespace ReniMadden {
     return ! getPossibleMoves(player).empty();
   }
 
+  bool Board::canEscape(const playerId player) const {
+    return (getDice() == 6) && (getFiguresOffBoard(player) > 0)
+      && (getFiguresOnField(player, 0) == 0);
+  }
+
   bool Board::needsToEscape(const playerId player) const {
-    return getFiguresOffBoard(player) == 4 ||
-      (getFiguresOffBoard(player) > 0 && ! canMove(player));
+    return
+      ( getFiguresOffBoard(player) == 4 ) ||
+      ( getFiguresOffBoard(player) == 3 &&
+        getFiguresOnField(player, 49) == 1 ) ||
+      ( getFiguresOffBoard(player) == 2 &&
+        getFiguresOnField(player, 49) == 1 &&
+        getFiguresOnField(player, 48) == 1 ) ||
+      ( getFiguresOffBoard(player) == 1 &&
+        getFiguresOnField(player, 49) == 1 &&
+        getFiguresOnField(player, 48) == 1 &&
+        getFiguresOnField(player, 47) == 1 );
   }
 
   bool Board::isMoveAllowed(const playerId player, const Move& move) const {

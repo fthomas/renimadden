@@ -62,6 +62,7 @@ namespace ReniMadden {
 
       std::list<Move>& getPossibleMoves(const playerId player) const;
       bool canMove(const playerId player) const;
+      bool canEscape(const playerId player) const;
       bool needsToEscape(const playerId player) const;
       bool isMoveAllowed(const playerId player, const Move& move) const;
       void move(const playerId player, const Move& move);

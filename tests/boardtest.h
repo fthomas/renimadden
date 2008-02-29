@@ -70,6 +70,16 @@ class BoardTest : public CppUnit::TestFixture {
       board->setDice(4);
       CPPUNIT_ASSERT( board->isMoveAllowed(PLAYER1, Move(20, 24)) == true );
       CPPUNIT_ASSERT( board->isMoveAllowed(PLAYER1, Move(20, 25)) == false );
+
+      board->reset();
+      board->addFiguresOffBoard(PLAYER1, -1);
+      board->addFiguresOnField(PLAYER1, 0, 1);
+      CPPUNIT_ASSERT( board->isSane() == true );
+      board->setDice(4);
+      list<Move> pm = board->getPossibleMoves(PLAYER1);
+      CPPUNIT_ASSERT( pm.front() == Move(0, 4));
+      pm.pop_front();
+      CPPUNIT_ASSERT( pm.empty() == true );
     }
 
     void testMovesBar() {

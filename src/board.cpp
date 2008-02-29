@@ -115,6 +115,20 @@ namespace ReniMadden {
     return (dist_opp < 0 ? dist_opp + 48 : dist_opp) % 48;
   }
 
+  bool Board::isSane() const {
+    int total_figures = 0;
+    for (int i = 0; i < 4; i++) {
+      playerId player = (playerId) i;
+      total_figures = getFiguresOffBoard(player);
+      for (int j = 0; j < 52; j++) {
+        total_figures += getFiguresOnField(player, j);
+      }
+      if (total_figures != 4)
+        return false;
+    }
+    return true;
+  }
+
   bool Board::isWinner(const playerId player) const {
     // Has the player off-board figures?
     if (figuresOffBoard[player] > 0)
@@ -211,6 +225,11 @@ namespace ReniMadden {
 
   bool Board::canMove(const playerId player) const {
     return ! getPossibleMoves(player).empty();
+  }
+
+  bool Board::needsToEscape(const playerId player) const {
+    return getFiguresOffBoard(player) == 4 ||
+      (getFiguresOffBoard(player) > 0 && ! canMove(player));
   }
 
   bool Board::isMoveAllowed(const playerId player, const Move& move) const {

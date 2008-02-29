@@ -17,10 +17,10 @@
 */
 
 #include "board.h"
+#include "game.h"
 #include "playerid.h"
 #include "move.h"
 
-#include <ctime>
 #include <iostream>
 #include <list>
 
@@ -30,8 +30,9 @@ using namespace ReniMadden;
 int main(int argc, char* argv[]) {
 
   Board board = Board();
+  Game game = Game(board);
 
-  cout << Board::getOpponentField(PLAYER3, PLAYER1, 34) << endl;
+  game.play_unattended();
 
   return 0;
 }

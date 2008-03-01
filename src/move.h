@@ -1,6 +1,6 @@
 /*
    ReniMadden - Mensch ärgere dich nicht for KDE
-   Copyright © 2007 Frank S. Thomas <frank@thomas-alfeld.de>
+   Copyright © 2007-2008 Frank S. Thomas <frank@thomas-alfeld.de>
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,30 +30,11 @@ namespace ReniMadden {
       int end;
 
     public:
-      inline Move() {
-        start = 0;
-        end = 0;
-      }
+      Move();
+      Move(const int _start, const int _end);
 
-      inline Move(const int _start, const int _end) {
-        if (_start >= _end)
-          throw std::logic_error("Move::Move(): start is greater than end");
-
-        if (_start < 0 || _end > 51)
-          throw std::out_of_range("Move::Move(): start or end are out of the "
-            "valid range");
-
-        start = _start;
-        end = _end;
-      }
-
-      inline int getStartField() const {
-        return start;
-      }
-
-      inline int getEndField() const {
-        return end;
-      }
+      int getStartField() const;
+      int getEndField() const;
   };
 
   bool operator==(const Move& a, const Move& b);

@@ -16,13 +16,10 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <iostream>
+
 #include "board.h"
 #include "game.h"
-#include "playerid.h"
-#include "move.h"
-
-#include <iostream>
-#include <list>
 
 using namespace std;
 using namespace ReniMadden;

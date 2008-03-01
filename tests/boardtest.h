@@ -111,17 +111,18 @@ class BoardTest : public CppUnit::TestFixture {
     }
 
     void testGetOpponentField() {
-      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER1, PLAYER2, 1) == 37 );
-      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER1, PLAYER3, 1) == 25 );
-      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER1, PLAYER4, 1) == 13 );
-      
-      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER2, PLAYER1, 1) == 13 );
-      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER3, PLAYER2, 1) == 13 );
-      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER4, PLAYER3, 1) == 13 );
-      
-      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER4, PLAYER1, 7) == 43 );
-      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER4, PLAYER2, 8) == 32 );
-      CPPUNIT_ASSERT( Board::getOpponentField(PLAYER4, PLAYER3, 9) == 21 );
+      board->reset();
+      CPPUNIT_ASSERT( board->getOpponentField(PLAYER1, PLAYER2, 1) == 37 );
+      CPPUNIT_ASSERT( board->getOpponentField(PLAYER1, PLAYER3, 1) == 25 );
+      CPPUNIT_ASSERT( board->getOpponentField(PLAYER1, PLAYER4, 1) == 13 );
+
+      CPPUNIT_ASSERT( board->getOpponentField(PLAYER2, PLAYER1, 1) == 13 );
+      CPPUNIT_ASSERT( board->getOpponentField(PLAYER3, PLAYER2, 1) == 13 );
+      CPPUNIT_ASSERT( board->getOpponentField(PLAYER4, PLAYER3, 1) == 13 );
+
+      CPPUNIT_ASSERT( board->getOpponentField(PLAYER4, PLAYER1, 7) == 43 );
+      CPPUNIT_ASSERT( board->getOpponentField(PLAYER4, PLAYER2, 8) == 32 );
+      CPPUNIT_ASSERT( board->getOpponentField(PLAYER4, PLAYER3, 9) == 21 );
     }
 };
 

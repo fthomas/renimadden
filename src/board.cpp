@@ -26,6 +26,15 @@
 namespace ReniMadden {
 
   Board::Board() {
+    cp = 4;
+    cf = 52;
+    csf = 52-4;
+    gap = csf / cp;
+
+    figuresOffBoard = std::vector<int>(cp);
+    std::vector<std::vector<int> > tmp(cp, std::vector<int>(cf));
+    figuresOnField = tmp;
+
     reset();
   }
 
@@ -35,11 +44,11 @@ namespace ReniMadden {
 
     // Reset the count of figures that are off-board and empty all fields on
     // the board and on the bars.
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < cp; i++) {
       figuresOffBoard[i] = 4;
 
-      for (int j = 0; j < 52; j++)
-        figuresOnBoard[i][j] = 0;
+      for (int j = 0; j < cf; j++)
+        figuresOnField[i][j] = 0;
     }
 
     return *this;
@@ -86,16 +95,16 @@ namespace ReniMadden {
   }
 
   int Board::getFiguresOnField(const playerId player, const int field) const {
-    return figuresOnBoard[player][field];
+    return figuresOnField[player][field];
   }
 
   Board& Board::addFiguresOnField(const playerId player, const int field,
     const int figures) {
-    if ((figuresOnBoard[player][field] + figures) < 0)
+    if ((figuresOnField[player][field] + figures) < 0)
       throw std::logic_error("Board::addFiguresOnField(): number of figures "
         "on field will be negative");
     else
-      figuresOnBoard[player][field] += figures;
+      figuresOnField[player][field] += figures;
     return *this;
   }
 
@@ -105,22 +114,22 @@ namespace ReniMadden {
       throw std::out_of_range("Board::setFiguresOnField(): number of figures "
         "on field is negative");
     else
-      figuresOnBoard[player][field] = figures;
+      figuresOnField[player][field] = figures;
     return *this;
   }
 
   int Board::getOpponentField(const playerId player, const playerId opponent,
-    const int field) {
-    int dist_opp = field + (player-opponent)*12;
-    return (dist_opp < 0 ? dist_opp + 48 : dist_opp) % 48;
+    const int field) const {
+    int dist_opp = field + (player-opponent) * gap;
+    return (dist_opp < 0 ? dist_opp + csf : dist_opp) % csf;
   }
 
   bool Board::isSane() const {
     int total_figures = 0;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < cp; i++) {
       playerId player = (playerId) i;
       total_figures = getFiguresOffBoard(player);
-      for (int j = 0; j < 52; j++) {
+      for (int j = 0; j < cf; j++) {
         total_figures += getFiguresOnField(player, j);
       }
       if (total_figures != 4)
@@ -131,19 +140,19 @@ namespace ReniMadden {
 
   bool Board::isWinner(const playerId player) const {
     // Has the player off-board figures?
-    if (figuresOffBoard[player] > 0)
+    if (getFiguresOffBoard(player) > 0)
       return false;
 
     // Has the player figures on-board?
-    for (int i = 0; i < 48; i++) {
-      if (figuresOnBoard[player][i] > 0)
+    for (int i = 0; i < csf; i++) {
+      if (getFiguresOnField(player, i) > 0)
         return false;
     }
 
     // If there are no remaining off-board and on-board figures they all must
     // be in the bar. So throw an exception if the bar is not fully stuffed.
-    for (int j = 48; j < 52; j++) {
-      if (figuresOnBoard[player][j] == 0)
+    for (int j = csf; j < cf; j++) {
+      if (getFiguresOnField(player, j) == 0)
         throw std::logic_error("Board::isWinner(): bar has empty fields "
           "although there are no remaining figures off- and on-board");
     }
@@ -152,13 +161,14 @@ namespace ReniMadden {
   }
 
   bool Board::hasWinner() const {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < cp; i++) {
       if (isWinner((playerId)i))
         return true;
     }
     return false;
   }
 
+  // @TODO: Rewrite to be independent of the total count of figures.
   std::list<Move>& Board::getPossibleMoves(const playerId player) const {
     // Check if the dice was rolled before and throw a logic error if it
     // wasn't since there are no possible moves then (if you don't count moves
@@ -191,7 +201,7 @@ namespace ReniMadden {
         possibleMoves->push_back(Move(0, dice));
     }
 
-    for (int i = 1; i < 43; i++) {
+    for (int i = 1; i <= csf-6; i++) {
       if (getFiguresOnField(player, i) > 0) {
         if (getFiguresOnField(player, i + dice) == 0)
           possibleMoves->push_back(Move(i, i + dice));
@@ -199,17 +209,17 @@ namespace ReniMadden {
     }
 
     // Check possible moves right in front of the bar.
-    for (int j = 43; j < 51; j++) {
-      if (j + dice > 51)
+    for (int j = csf-6+1; j < cf-1; j++) {
+      if (j + dice >= cf )
         break;
 
       if (getFiguresOnField(player, j) > 0) {
         bool can_move = true;
-        
+
         // Moves in or into the bar are only allowed if no other figure is on
         // a field in front of the move's destination. Or to put it another
         // way, you can't jump over figures that are in the bar.
-        int lower_limit = (j > 47) ? j: 47;
+        int lower_limit = (j > cf-4-1) ? j: cf-4-1;
         for (int k = j + dice; k > lower_limit; k--) {
           if (getFiguresOnField(player, k) != 0)
             can_move = false;
@@ -228,22 +238,27 @@ namespace ReniMadden {
   }
 
   bool Board::canEscape(const playerId player) const {
-    return (getDice() == 6) && (getFiguresOffBoard(player) > 0)
-      && (getFiguresOnField(player, 0) == 0);
+    return getDice() == 6 && getFiguresOffBoard(player) > 0
+      && getFiguresOnField(player, 0) == 0;
   }
 
+  // @TODO: Rewrite to be independent of the total count of figures.
   bool Board::needsToEscape(const playerId player) const {
-    return
-      ( getFiguresOffBoard(player) == 4 ) ||
-      ( getFiguresOffBoard(player) == 3 &&
-        getFiguresOnField(player, 49) == 1 ) ||
-      ( getFiguresOffBoard(player) == 2 &&
-        getFiguresOnField(player, 49) == 1 &&
-        getFiguresOnField(player, 48) == 1 ) ||
-      ( getFiguresOffBoard(player) == 1 &&
-        getFiguresOnField(player, 49) == 1 &&
-        getFiguresOnField(player, 48) == 1 &&
-        getFiguresOnField(player, 47) == 1 );
+    bool offBoard4 = getFiguresOffBoard(player) == 4;
+
+    bool offBoard3 = getFiguresOffBoard(player) == 3
+      && getFiguresOnField(player, cf-1) == 1;
+
+    bool offBoard2 = getFiguresOffBoard(player) == 2
+      && getFiguresOnField(player, cf-1) == 1
+      && getFiguresOnField(player, cf-2) == 1;
+
+    bool offBoard1 = getFiguresOffBoard(player) == 1
+      && getFiguresOnField(player, cf-1) == 1
+      && getFiguresOnField(player, cf-2) == 1
+      && getFiguresOnField(player, cf-3) == 1;
+
+    return offBoard4 || offBoard3 || offBoard2 || offBoard1;
   }
 
   bool Board::isMoveAllowed(const playerId player, const Move& move) const {
@@ -271,7 +286,7 @@ namespace ReniMadden {
     }
 
     // Capture possible opponent figures and move them off-board.
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < cp; i++) {
       playerId opponent = (playerId) i;
       if (opponent == player)
         continue;

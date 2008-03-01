@@ -25,7 +25,7 @@
 namespace ReniMadden {
 
   class Game {
-    protected:
+    private:
       Board board;
       playerId activeId; 
 

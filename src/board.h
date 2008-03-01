@@ -20,6 +20,7 @@
 #define BOARD_H
 
 #include <list>
+#include <vector>
 
 #include "move.h"
 #include "playerid.h"
@@ -27,13 +28,15 @@
 namespace ReniMadden {
 
   class Board {
-    protected:
+    private:
       int dice;
-      int figuresOffBoard[4];
+      std::vector<int> figuresOffBoard;
+      std::vector<std::vector<int> > figuresOnField;
 
-      // The first 48 fields are shared among all players and the last four
-      // fields correspond to the bar of each player and are 'private'.
-      int figuresOnBoard[4][52];
+      int cp; // cp := count_players
+      int cf; // cf := count_fields
+      int csf; // csf := count_shared_fields
+      int gap; // gap between the players; gap = csf/cp
 
     public:
       Board();
@@ -53,8 +56,8 @@ namespace ReniMadden {
       Board& setFiguresOnField(const playerId player, const int field,
         const int figures);
 
-      static int getOpponentField(const playerId player,
-        const playerId opponent, const int field);
+      int getOpponentField(const playerId player, const playerId opponent,
+        const int field) const;
 
       bool isSane() const;
       bool isWinner(const playerId player) const;

@@ -33,13 +33,33 @@ namespace ReniMadden {
       std::vector<int> figuresOffBoard;
       std::vector<std::vector<int> > figuresOnField;
 
-      int cp; // cp := count_players
-      int cf; // cf := count_fields
-      int csf; // csf := count_shared_fields
-      int gap; // gap between the players; gap = csf/cp
+      /** Stores the count of players on the board (cp = count_players). */
+      int cp;
+
+      /**
+       * Stores the count of all fields on the board including the bar
+       * (cf = count_fields).
+       */
+      int cf;
+
+      /** Stores the count of figures per player (tf = total_figures). */
+      int tf;
+
+      /** 
+       * Stores the size of the board, so the count of fields that are shared 
+       * among all players (cfs = count_shared_fields).
+       */
+      int csf;
+
+      /** 
+       * Stores the gap between adjacent players, so the count of fields
+       * between the starting points of two adjacent players.
+       */
+      int gap;
 
     public:
-      Board();
+      Board(const int players = 4, const int size = 48,
+        const int figurespp = 4);
       Board& reset();
 
       Board& rollDice();
@@ -67,6 +87,8 @@ namespace ReniMadden {
       bool canMove(const playerId player) const;
       bool canEscape(const playerId player) const;
       bool needsToEscape(const playerId player) const;
+      bool isSliceOccupied(const playerId player, const int start,
+        const int end) const;
       bool isMoveAllowed(const playerId player, const Move& move) const;
       void move(const playerId player, const Move& move);
   };

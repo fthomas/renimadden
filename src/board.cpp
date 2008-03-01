@@ -25,14 +25,14 @@
 
 namespace ReniMadden {
 
-  Board::Board() {
-    cp = 4;
-    cf = 52;
-    csf = 52-4;
+  Board::Board(const int players, const int size, const int figurespp)
+    : cp(players), csf(size), tf(figurespp) {
+
+    cf = csf + tf;
     gap = csf / cp;
 
-    figuresOffBoard = std::vector<int>(cp);
-    std::vector<std::vector<int> > tmp(cp, std::vector<int>(cf));
+    figuresOffBoard = std::vector<int>(cp, tf);
+    std::vector<std::vector<int> > tmp(cp, std::vector<int>(cf, 0));
     figuresOnField = tmp;
 
     reset();
@@ -45,7 +45,7 @@ namespace ReniMadden {
     // Reset the count of figures that are off-board and empty all fields on
     // the board and on the bars.
     for (int i = 0; i < cp; i++) {
-      figuresOffBoard[i] = 4;
+      figuresOffBoard[i] = tf;
 
       for (int j = 0; j < cf; j++)
         figuresOnField[i][j] = 0;
@@ -132,7 +132,7 @@ namespace ReniMadden {
       for (int j = 0; j < cf; j++) {
         total_figures += getFiguresOnField(player, j);
       }
-      if (total_figures != 4)
+      if (total_figures != tf)
         return false;
     }
     return true;
@@ -168,7 +168,6 @@ namespace ReniMadden {
     return false;
   }
 
-  // @TODO: Rewrite to be independent of the total count of figures.
   std::list<Move>& Board::getPossibleMoves(const playerId player) const {
     // Check if the dice was rolled before and throw a logic error if it
     // wasn't since there are no possible moves then (if you don't count moves
@@ -188,13 +187,12 @@ namespace ReniMadden {
     // also occupied it may move another field further.
     if (getFiguresOnField(player, 0) > 0) {
       if (getFiguresOffBoard(player) > 0) {
-        if (getFiguresOnField(player, dice) == 0)
-          possibleMoves->push_back(Move(0, dice));
-        else if (getFiguresOnField(player, dice + 1) == 0)
-          possibleMoves->push_back(Move(0, dice + 1));
-        else if (getFiguresOnField(player, dice + 2) == 0)
-          possibleMoves->push_back(Move(0, dice + 2));
-
+        for (int l = 0; l <= tf-2; l++) {
+          if (getFiguresOnField(player, dice + l) == 0) {
+            possibleMoves->push_back(Move(0, dice + l));
+            break;
+          }
+        }
         return *possibleMoves;
       }
       else if (getFiguresOnField(player, dice) == 0)
@@ -219,7 +217,7 @@ namespace ReniMadden {
         // Moves in or into the bar are only allowed if no other figure is on
         // a field in front of the move's destination. Or to put it another
         // way, you can't jump over figures that are in the bar.
-        int lower_limit = (j > cf-4-1) ? j: cf-4-1;
+        int lower_limit = (j > csf-1) ? j : csf-1;
         for (int k = j + dice; k > lower_limit; k--) {
           if (getFiguresOnField(player, k) != 0)
             can_move = false;
@@ -242,23 +240,22 @@ namespace ReniMadden {
       && getFiguresOnField(player, 0) == 0;
   }
 
-  // @TODO: Rewrite to be independent of the total count of figures.
   bool Board::needsToEscape(const playerId player) const {
-    bool offBoard4 = getFiguresOffBoard(player) == 4;
+    for (int i = 0; i < tf; i++) {
+      if (getFiguresOffBoard(player) == tf-i
+        && isSliceOccupied(player, cf-i, cf-1))
+        return true;
+    }
+    return false;
+  }
 
-    bool offBoard3 = getFiguresOffBoard(player) == 3
-      && getFiguresOnField(player, cf-1) == 1;
-
-    bool offBoard2 = getFiguresOffBoard(player) == 2
-      && getFiguresOnField(player, cf-1) == 1
-      && getFiguresOnField(player, cf-2) == 1;
-
-    bool offBoard1 = getFiguresOffBoard(player) == 1
-      && getFiguresOnField(player, cf-1) == 1
-      && getFiguresOnField(player, cf-2) == 1
-      && getFiguresOnField(player, cf-3) == 1;
-
-    return offBoard4 || offBoard3 || offBoard2 || offBoard1;
+  bool Board::isSliceOccupied(const playerId player, const int start,
+    const int end) const {
+    for (int i = start; i <= end; i++) {
+      if (getFiguresOnField(player, i) == 0)
+        return false;
+    }
+    return true;
   }
 
   bool Board::isMoveAllowed(const playerId player, const Move& move) const {
@@ -284,6 +281,10 @@ namespace ReniMadden {
       addFiguresOnField(player, start, -1);
       addFiguresOnField(player, end, 1);
     }
+
+    // Don't capture opponent figures if we are moving into the bar.
+    if (end >= csf)
+      return;
 
     // Capture possible opponent figures and move them off-board.
     for (int i = 0; i < cp; i++) {

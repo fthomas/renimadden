@@ -35,7 +35,8 @@ class BoardTest : public CppUnit::TestFixture {
   CPPUNIT_TEST(testDice);
   CPPUNIT_TEST(testMovesBoard);
   CPPUNIT_TEST(testMovesBar);
-  CPPUNIT_TEST(testGetOpponentField); 
+  CPPUNIT_TEST(testGetOpponentField);
+  CPPUNIT_TEST(testOccupiedSlices);
   CPPUNIT_TEST_SUITE_END();
 
   private:
@@ -123,6 +124,33 @@ class BoardTest : public CppUnit::TestFixture {
       CPPUNIT_ASSERT( board->getOpponentField(PLAYER4, PLAYER1, 7) == 43 );
       CPPUNIT_ASSERT( board->getOpponentField(PLAYER4, PLAYER2, 8) == 32 );
       CPPUNIT_ASSERT( board->getOpponentField(PLAYER4, PLAYER3, 9) == 21 );
+    }
+
+    void testOccupiedSlices() {
+      board->reset();
+      board->setFiguresOnField(PLAYER1, 46, 1);
+      board->setFiguresOnField(PLAYER1, 47, 1);
+      CPPUNIT_ASSERT( board->isSliceOccupied(PLAYER1, 46, 47) == true);
+      board->setFiguresOnField(PLAYER1, 48, 1);
+      CPPUNIT_ASSERT( board->isSliceOccupied(PLAYER1, 46, 48) == true);
+      board->setFiguresOnField(PLAYER1, 49, 1);
+      CPPUNIT_ASSERT( board->isSliceOccupied(PLAYER1, 46, 49) == true);
+      CPPUNIT_ASSERT( board->isSliceOccupied(PLAYER1, 45, 49) == false);
+      CPPUNIT_ASSERT( board->isSliceOccupied(PLAYER1, 46, 50) == false);
+      board->setFiguresOnField(PLAYER1, 47, 0);
+      CPPUNIT_ASSERT( board->isSliceOccupied(PLAYER1, 46, 49) == false);
+
+      board->reset();
+      board->setFiguresOffBoard(PLAYER1, 2);
+      board->setFiguresOnField(PLAYER1, 51, 1);
+      board->setFiguresOnField(PLAYER1, 50, 1);
+      CPPUNIT_ASSERT( board->needsToEscape(PLAYER1) == true );
+      board->setFiguresOffBoard(PLAYER1, 1);
+      board->setFiguresOnField(PLAYER1, 49, 1);
+      CPPUNIT_ASSERT( board->needsToEscape(PLAYER1) == true );
+      board->setFiguresOnField(PLAYER1, 49, 0);
+      board->setFiguresOnField(PLAYER1, 48, 1);
+      CPPUNIT_ASSERT( board->needsToEscape(PLAYER1) == false );
     }
 };
 

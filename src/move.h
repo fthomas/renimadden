@@ -22,27 +22,29 @@
 #include <ostream>
 #include <stdexcept>
 
-namespace ReniMadden {
+namespace ReniMadden
+{
 
-  class Move {
-    private:
-      int start;
-      int end;
+class Move
+{
+private:
+    int start;
+    int end;
 
-    public:
-      Move();
-      Move(const int _start, const int _end);
+public:
+    Move();
+    Move(const int _start, const int _end);
 
-      int getStartField() const;
-      int getEndField() const;
-  };
+    int getStartField() const;
+    int getEndField() const;
+};
 
-  bool operator==(const Move& a, const Move& b);
+bool operator==(const Move& a, const Move& b);
 
-  std::ostream& operator<<(std::ostream& os, const Move& move);
+std::ostream& operator<<(std::ostream& os, const Move& move);
 
 } // namespace ReniMadden
 
 #endif // MOVE_H
 
-// vim: set ts=2 sw=2:
+// vim: set ts=4 sw=4:

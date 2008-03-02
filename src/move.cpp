@@ -20,42 +20,51 @@
 
 #include "move.h"
 
-namespace ReniMadden {
+namespace ReniMadden
+{
 
-  Move::Move() {
+Move::Move()
+{
     start = 0;
     end = 0;
-  }
+}
 
-  Move::Move(const int _start, const int _end) {
-    if (_start >= _end)
-      throw std::logic_error("Move::Move(): start is greater than end");
+Move::Move(const int _start, const int _end)
+{
+    if (_start >= _end) {
+        throw std::logic_error("Move::Move(): start is greater than end");
+    }
 
-    if (_start < 0)
-      throw std::out_of_range("Move::Move(): start is negative");
+    if (_start < 0) {
+        throw std::out_of_range("Move::Move(): start is negative");
+    }
 
     start = _start;
     end = _end;
-  }
+}
 
-  int Move::getStartField() const {
+int Move::getStartField() const
+{
     return start;
-  }
+}
 
-  int Move::getEndField() const {
+int Move::getEndField() const
+{
     return end;
-  }
+}
 
-  bool operator==(const Move& a, const Move& b) {
+bool operator==(const Move& a, const Move& b)
+{
     return (a.getStartField() == b.getStartField())
-      && (a.getEndField() == b.getEndField());
-  }
+           && (a.getEndField() == b.getEndField());
+}
 
-  std::ostream& operator<<(std::ostream& os, const Move& move) {
+std::ostream& operator<<(std::ostream& os, const Move& move)
+{
     return os << "Move(" << move.getStartField() << ", "
-                         << move.getEndField() << ")";
-  }
+           << move.getEndField() << ")";
+}
 
 } // namespace ReniMadden
 
-// vim: set ts=2 sw=2:
+// vim: set ts=4 sw=4:

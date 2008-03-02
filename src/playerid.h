@@ -19,19 +19,20 @@
 #ifndef PLAYERID_H
 #define PLAYERID_H
 
-namespace ReniMadden {
+namespace ReniMadden
+{
 
-  enum playerId {
+enum playerId {
     PLAYER1 = 0,
     PLAYER2 = 1,
     PLAYER3 = 2,
     PLAYER4 = 3,
     PLAYER5 = 4,
     PLAYER6 = 5
-  };
+};
 
 } // namespace ReniMadden
 
 #endif // PLAYERID_H
 
-// vim: set ts=2 sw=2:
+// vim: set ts=4 sw=4:

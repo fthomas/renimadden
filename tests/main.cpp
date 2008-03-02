@@ -20,11 +20,12 @@
 
 #include "boardtest.h"
 
-int main(int argc, char* argv[]) {
-  CppUnit::TextUi::TestRunner runner;
-  runner.addTest(BoardTest::suite());
-  runner.run();
-  return 0;
+int main(int argc, char* argv[])
+{
+    CppUnit::TextUi::TestRunner runner;
+    runner.addTest(BoardTest::suite());
+    runner.run();
+    return 0;
 }
 
-// vim: set ts=2 sw=2:
+// vim: set ts=4 sw=4:

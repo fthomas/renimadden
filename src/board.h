@@ -25,76 +25,78 @@
 #include "move.h"
 #include "playerid.h"
 
-namespace ReniMadden {
+namespace ReniMadden
+{
 
-  class Board {
-    private:
-      int dice;
-      std::vector<int> figuresOffBoard;
-      std::vector<std::vector<int> > figuresOnField;
+class Board
+{
+private:
+    int dice;
+    std::vector<int> figuresOffBoard;
+    std::vector<std::vector<int> > figuresOnField;
 
-      /** Stores the count of players on the board (cp = count_players). */
-      int cp;
+    /** Stores the count of players on the board (cp = count_players). */
+    int cp;
 
-      /**
-       * Stores the count of all fields on the board including the bar
-       * (cf = count_fields).
-       */
-      int cf;
+    /**
+     * Stores the count of all fields on the board including the bar
+     * (cf = count_fields).
+     */
+    int cf;
 
-      /** Stores the count of figures per player (tf = total_figures). */
-      int tf;
+    /** Stores the count of figures per player (tf = total_figures). */
+    int tf;
 
-      /** 
-       * Stores the size of the board, so the count of fields that are shared 
-       * among all players (cfs = count_shared_fields).
-       */
-      int csf;
+    /**
+     * Stores the size of the board, so the count of fields that are shared
+     * among all players (cfs = count_shared_fields).
+     */
+    int csf;
 
-      /** 
-       * Stores the gap between adjacent players, so the count of fields
-       * between the starting points of two adjacent players.
-       */
-      int gap;
+    /**
+     * Stores the gap between adjacent players, so the count of fields
+     * between the starting points of two adjacent players.
+     */
+    int gap;
 
-    public:
-      Board(const int players = 4, const int size = 48,
-        const int figurespp = 4);
-      Board& reset();
+public:
+    Board(const int players = 4, const int size = 48,
+          const int figurespp = 4);
+    Board& reset();
 
-      Board& rollDice();
-      int getDice() const;
-      Board& setDice(const int value);
+    Board& rollDice();
+    int getDice() const;
+    Board& setDice(const int value);
 
-      int getFiguresOffBoard(const playerId player) const;
-      Board& addFiguresOffBoard(const playerId player, const int figures);
-      Board& setFiguresOffBoard(const playerId player, const int figures);
+    int getFiguresOffBoard(const playerId player) const;
+    Board& addFiguresOffBoard(const playerId player, const int figures);
+    Board& setFiguresOffBoard(const playerId player, const int figures);
 
-      int getFiguresOnField(const playerId player, const int field) const;
-      Board& addFiguresOnField(const playerId player, const int field,
-        const int figures);
-      Board& setFiguresOnField(const playerId player, const int field,
-        const int figures);
+    int getFiguresOnField(const playerId player, const int field) const;
+    Board& addFiguresOnField(const playerId player, const int field,
+                             const int figures);
+    Board& setFiguresOnField(const playerId player, const int field,
+                             const int figures);
 
-      int getOpponentField(const playerId player, const playerId opponent,
-        const int field) const;
+    int getOpponentField(const playerId player, const playerId opponent,
+                         const int field) const;
 
-      bool isSane() const;
-      bool isWinner(const playerId player) const;
-      bool hasWinner() const;
+    bool isSane() const;
+    bool isWinner(const playerId player) const;
+    bool hasWinner() const;
 
-      std::list<Move>& getPossibleMoves(const playerId player) const;
-      bool canMove(const playerId player) const;
-      bool canEscape(const playerId player) const;
-      bool needsToEscape(const playerId player) const;
-      bool isSliceOccupied(const playerId player, const int start,
-        const int end) const;
-      bool isMoveAllowed(const playerId player, const Move& move) const;
-      void move(const playerId player, const Move& move);
-  };
+    std::list<Move>& getPossibleMoves(const playerId player) const;
+    bool canMove(const playerId player) const;
+    bool canEscape(const playerId player) const;
+    bool needsToEscape(const playerId player) const;
+    bool isSliceOccupied(const playerId player, const int start,
+                         const int end) const;
+    bool isMoveAllowed(const playerId player, const Move& move) const;
+    void move(const playerId player, const Move& move);
+};
 
 } // namespace ReniMadden
 
 #endif // BOARD_H
 
-// vim: set ts=2 sw=2:
+// vim: set ts=4 sw=4:

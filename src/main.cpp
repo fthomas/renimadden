@@ -24,14 +24,14 @@
 using namespace std;
 using namespace ReniMadden;
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
+    Board board = Board();
+    Game game = Game(board);
 
-  Board board = Board();
-  Game game = Game(board);
+    game.play_unattended();
 
-  game.play_unattended();
-
-  return 0;
+    return 0;
 }
 
-// vim: set ts=2 sw=2:
+// vim: set ts=4 sw=4:

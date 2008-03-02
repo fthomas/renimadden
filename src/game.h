@@ -22,21 +22,23 @@
 #include "board.h"
 #include "playerid.h"
 
-namespace ReniMadden {
+namespace ReniMadden
+{
 
-  class Game {
-    private:
-      Board board;
-      playerId activeId; 
+class Game
+{
+private:
+    Board board;
+    playerId activeId;
 
-    public:
-      Game(Board& _board); // Player p1, Player p2, Player p3, Player p4);
-      void play_unattended();
-      playerId nextPlayer();
-  };
+public:
+    Game(Board& _board); // Player p1, Player p2, Player p3, Player p4);
+    void play_unattended();
+    playerId nextPlayer();
+};
 
 } // namespace ReniMadden
 
 #endif // GAME_H
 
-// vim: set ts=2 sw=2:
+// vim: set ts=4 sw=4:

@@ -31,33 +31,31 @@ namespace ReniMadden
 class Board
 {
 private:
-    int dice;
-    std::vector<int> figuresOffBoard;
-    std::vector<std::vector<int> > figuresOnField;
+    int mDice;
 
-    /** Stores the count of players on the board (cp = count_players). */
-    int cp;
-
-    /**
-     * Stores the count of all fields on the board including the bar
-     * (cf = count_fields).
-     */
-    int cf;
-
-    /** Stores the count of figures per player (tf = total_figures). */
-    int tf;
+    /** Stores the number of players on the board. */
+    int mNumberOfPlayers;
 
     /**
      * Stores the size of the board, so the count of fields that are shared
-     * among all players (cfs = count_shared_fields).
+     * among all players.
      */
-    int csf;
+    int mBoardSize;
+
+    /** Stores the number of figures per player. */
+    int mTotalFigures;
+
+    /** Stores the number of all fields on the board including the bar. */
+    int mNumberOfFields;
 
     /**
      * Stores the gap between adjacent players, so the count of fields
      * between the starting points of two adjacent players.
      */
-    int gap;
+    int mGap;
+
+    std::vector<int> mFiguresOffBoard;
+    std::vector<std::vector<int> > mFiguresOnField;
 
 public:
     Board(const int players = 4, const int size = 48,
@@ -67,6 +65,8 @@ public:
     Board& rollDice();
     int getDice() const;
     Board& setDice(const int value);
+
+    int getNumberOfPlayers() const;
 
     int getFiguresOffBoard(const playerId player) const;
     Board& addFiguresOffBoard(const playerId player, const int figures);

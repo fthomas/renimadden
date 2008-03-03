@@ -209,8 +209,7 @@ std::list<Move>& Board::getPossibleMoves(const playerId player) const
                                "to zero, roll it first");
     }
 
-    // This list will hold all possible Moves for player and a pointer to it
-    // will be the return value of this method.
+    // This list will hold all possible moves for player.
     std::list<Move>* possibleMoves = new std::list<Move>;
 
     // Figures that got from off-board to on-board must move away from the
@@ -264,7 +263,39 @@ std::list<Move>& Board::getPossibleMoves(const playerId player) const
             }
         }
     }
+
+    // Check if the possible moves could capture opponent figures and
+    // if there are any such moves, only return these as possible moves
+    // (Schlagzwang).
+    std::list<Move>* possibleCapturingMoves =
+        &getCapturingMoves(player, *possibleMoves);
+    if (! possibleCapturingMoves->empty()) {
+        return *possibleCapturingMoves;
+    }
     return *possibleMoves;
+}
+
+std::list<Move>& Board::getCapturingMoves(const playerId player,
+        const std::list<Move>& moves) const
+{
+    std::list<Move>* capturingMoves = new std::list<Move>;
+    std::list<Move>::const_iterator it;
+
+    for (it = moves.begin(); it != moves.end(); ++it) {
+        for (int i = 0; i < mNumberOfPlayers; i++) {
+            playerId opponent = (playerId) i;
+            if (opponent == player) {
+                continue;
+            }
+
+            int end_field = (*it).getEndField();
+            int opp_field = getOpponentField(player, opponent, end_field);
+            if (getFiguresOnField(opponent, opp_field) > 0) {
+                capturingMoves->push_back(*it);
+            }
+        }
+    }
+    return *capturingMoves;
 }
 
 bool Board::canMove(const playerId player) const

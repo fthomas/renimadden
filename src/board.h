@@ -31,6 +31,7 @@ namespace ReniMadden
 class Board
 {
 private:
+    /** Stores the value of the dice. */
     int mDice;
 
     /** Stores the number of players on the board. */
@@ -86,6 +87,8 @@ public:
     bool hasWinner() const;
 
     std::list<Move>& getPossibleMoves(const playerId player) const;
+    std::list<Move>& getCapturingMoves(const playerId player,
+                                       const std::list<Move>& moves) const;
     bool canMove(const playerId player) const;
     bool canEscape(const playerId player) const;
     bool needsToEscape(const playerId player) const;

@@ -38,6 +38,7 @@ class BoardTest : public CppUnit::TestFixture
     CPPUNIT_TEST(testMovesBar);
     CPPUNIT_TEST(testGetOpponentField);
     CPPUNIT_TEST(testOccupiedSlices);
+    CPPUNIT_TEST(testGetCapturingMoves);
     CPPUNIT_TEST_SUITE_END();
 
 private:
@@ -152,6 +153,24 @@ public:
         board->setFiguresOnField(PLAYER1, 49, 0);
         board->setFiguresOnField(PLAYER1, 48, 1);
         CPPUNIT_ASSERT(board->needsToEscape(PLAYER1) == false);
+    }
+
+    void testGetCapturingMoves() {
+        board->reset();
+        board->setDice(6);
+        board->setFiguresOnField(PLAYER1, 1, 1);
+        board->setFiguresOnField(PLAYER1, 2, 1);
+        int opp_field = board->getOpponentField(PLAYER1, PLAYER2, 1 + 6);
+        board->setFiguresOnField(PLAYER2, opp_field, 1);
+
+        list<Move> pm;
+        list<Move> cm;
+        pm.push_back(Move(1, 7));
+        pm.push_back(Move(2, 8));
+        cm.push_back(Move(1, 7));
+
+        CPPUNIT_ASSERT(board->getPossibleMoves(PLAYER1) == pm);
+        CPPUNIT_ASSERT(board->getCapturingMoves(PLAYER1, pm) == cm);
     }
 };
 

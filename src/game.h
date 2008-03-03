@@ -19,7 +19,10 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <list>
+
 #include "board.h"
+#include "listener.h"
 #include "playerid.h"
 
 namespace ReniMadden
@@ -27,13 +30,18 @@ namespace ReniMadden
 
 class Game
 {
-private:
-    Board board;
-    playerId activeId;
-
 public:
-    Game(Board& _board); // Player p1, Player p2, Player p3, Player p4);
-    void play_unattended();
+    Game(Board& board);
+    Game& playUnattended();
+
+private:
+    Board mBoard;
+    playerId mActiveId;
+    std::list<Listener> mListeners;
+
+    Game& diceRolledInform(const int dice);
+    Game& playerChangedInform(const playerId player);
+    Game& gameEndedWithWinnerInform(const playerId player);
     playerId nextPlayer();
 };
 

@@ -16,82 +16,107 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
-#include <unistd.h>
+#include <stdexcept>
 
 #include "game.h"
-#include "playerid.h"
 
 using namespace std;
 
 namespace ReniMadden
 {
 
-Game::Game(Board& _board)
+Game::Game(Board& board)
 {
-    board = _board;
-    activeId = PLAYER1;
+    mBoard = board;
+    mActiveId = PLAYER1;
+    mListeners = std::list<Listener>();
 }
 
-void Game::play_unattended()
+Game& Game::playUnattended()
 {
-
-    while (! board.hasWinner()) {
-        cout << endl;
-
-        // Let the player try to "escape" from off-board three times.
-        if (board.needsToEscape(activeId)) {
+    // Play as long as the board has no winner.
+    while (! mBoard.hasWinner()) {
+        if (mBoard.needsToEscape(mActiveId)) {
             for (int i = 0; i < 3; i++) {
-                board.rollDice();
-                cout << "Player " << activeId << " tries to escape: "
-                << board.getDice() << endl;
-
-                if (board.getDice() == 6) {
-                    board.addFiguresOffBoard(activeId, -1);
-                    board.addFiguresOnField(activeId, 0, 1);
+                mBoard.rollDice();
+                diceRolledInform(mBoard.getDice());
+                if (mBoard.getDice() == 6) {
+                    mBoard.escape(mActiveId);
                     break;
                 }
             }
-            // The player is unlucky; next!
-            if (board.getDice() != 6) {
+            if (mBoard.getDice() != 6) {
                 nextPlayer();
                 continue;
             }
         }
 
-        // Let the player dice (again).
-        board.rollDice();
-        if (board.getDice() == 6 && board.canEscape(activeId)) {
-            board.addFiguresOffBoard(activeId, -1);
-            board.addFiguresOnField(activeId, 0, 1);
+        std::list<Move> pm = std::list<Move>();
+
+        while (mBoard.rollDice().getDice() == 6) {
+            if (mBoard.canEscape(mActiveId)) {
+                mBoard.escape(mActiveId);
+            }
+            pm = mBoard.getPossibleMoves(mActiveId);
+            if (! pm.empty()) {
+                mBoard.move(mActiveId, pm.front());
+            }
         }
-        cout << "Player " << activeId << " dices: " << board.getDice() << endl;
-        usleep(5000);
-        list<Move> pm = board.getPossibleMoves(activeId);
-        if (pm.empty()) {
-            activeId = (playerId)(((int)activeId + 1) % 4) ;
+
+        pm = mBoard.getPossibleMoves(mActiveId);
+        if (! pm.empty()) {
+            mBoard.move(mActiveId, pm.front());
+        } else {
+            nextPlayer();
             continue;
         }
-        Move m = board.getPossibleMoves(activeId).front();
-        board.move(activeId, m);
-        cout << "Player " << activeId << " makes this move: "
-        << m <<  endl;
-        if (!board.isSane()) {
-            cout << "ERRRROR";
-            return;
+
+        if (! mBoard.isSane()) {
+            throw std::logic_error("Game::playUnattended(): board is insane");
         }
 
-        if (board.isWinner(activeId))
-            cout << "Player " << activeId << " has won!" << endl;
+        if (mBoard.isWinner(mActiveId)) {
+            gameEndedWithWinnerInform(mActiveId);
+            return *this;
+        }
+        nextPlayer();
+    }
+    return *this;
+}
 
-        activeId = (playerId)(((int)activeId + 1) % 4) ;
-    } // while (! board.hasWinner())
+Game& Game::diceRolledInform(const int dice)
+{
+    std::list<Listener>::iterator it;
+    for (it = mListeners.begin(); it != mListeners.end(); ++it) {
+        (*it).diceRolled(dice);
+    }
+    return *this;
+}
+
+Game& Game::playerChangedInform(const playerId player)
+{
+    std::list<Listener>::iterator it;
+    for (it = mListeners.begin(); it != mListeners.end(); ++it) {
+        (*it).playerChanged(player);
+    }
+    return *this;
+}
+
+Game& Game::gameEndedWithWinnerInform(const playerId player)
+{
+    std::list<Listener>::iterator it;
+    for (it = mListeners.begin(); it != mListeners.end(); ++it) {
+        (*it).gameEndedWithWinner(player);
+    }
+    return *this;
 }
 
 playerId Game::nextPlayer()
 {
-    activeId = (playerId)((activeId + 1) % 4);
-    return activeId;
+    int playersCnt = mBoard.getPlayersCnt();
+    mActiveId = (playerId)((mActiveId + 1) % playersCnt);
+    playerChangedInform(mActiveId);
+    return mActiveId;
 }
 
 } // namespace ReniMadden

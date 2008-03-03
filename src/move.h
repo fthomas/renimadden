@@ -20,23 +20,22 @@
 #define MOVE_H
 
 #include <ostream>
-#include <stdexcept>
 
 namespace ReniMadden
 {
 
 class Move
 {
-private:
-    int start;
-    int end;
-
 public:
     Move();
-    Move(const int _start, const int _end);
+    Move(const int start, const int end);
 
     int getStartField() const;
     int getEndField() const;
+
+private:
+    int mStartField;
+    int mEndField;
 };
 
 bool operator==(const Move& a, const Move& b);

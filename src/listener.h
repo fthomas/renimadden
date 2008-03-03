@@ -1,6 +1,6 @@
 /*
    ReniMadden - Mensch ärgere dich nicht for KDE
-   Copyright © 2007-2008 Frank S. Thomas <frank@thomas-alfeld.de>
+   Copyright © 2008 Frank S. Thomas <frank@thomas-alfeld.de>
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,22 +16,24 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
+#ifndef LISTENER_H
+#define LISTENER_H
 
-#include "board.h"
-#include "game.h"
+#include "playerid.h"
 
-using namespace std;
-using namespace ReniMadden;
-
-int main(int argc, char* argv[])
+namespace ReniMadden
 {
-    Board board = Board();
-    Game game = Game(board);
 
-    game.playUnattended();
+class Listener
+{
+public:
+    virtual void diceRolled(const int dice) {}
+    virtual void playerChanged(playerId player) {}
+    virtual void gameEndedWithWinner(playerId player) {}
+};
 
-    return 0;
-}
+} // namespace ReniMadden
+
+#endif // LISTENER_H
 
 // vim: set ts=4 sw=4:

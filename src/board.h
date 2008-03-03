@@ -30,34 +30,6 @@ namespace ReniMadden
 
 class Board
 {
-private:
-    /** Stores the value of the dice. */
-    int mDice;
-
-    /** Stores the number of players on the board. */
-    int mNumberOfPlayers;
-
-    /**
-     * Stores the size of the board, so the count of fields that are shared
-     * among all players.
-     */
-    int mBoardSize;
-
-    /** Stores the number of figures per player. */
-    int mTotalFigures;
-
-    /** Stores the number of all fields on the board including the bar. */
-    int mNumberOfFields;
-
-    /**
-     * Stores the gap between adjacent players, so the count of fields
-     * between the starting points of two adjacent players.
-     */
-    int mGap;
-
-    std::vector<int> mFiguresOffBoard;
-    std::vector<std::vector<int> > mFiguresOnField;
-
 public:
     Board(const int players = 4, const int size = 48,
           const int figurespp = 4);
@@ -67,7 +39,7 @@ public:
     int getDice() const;
     Board& setDice(const int value);
 
-    int getNumberOfPlayers() const;
+    int getPlayersCnt() const;
 
     int getFiguresOffBoard(const playerId player) const;
     Board& addFiguresOffBoard(const playerId player, const int figures);
@@ -95,7 +67,38 @@ public:
     bool isSliceOccupied(const playerId player, const int start,
                          const int end) const;
     bool isMoveAllowed(const playerId player, const Move& move) const;
-    void move(const playerId player, const Move& move);
+    Board& move(const playerId player, const Move& move);
+    Board& escape(const playerId player);
+
+private:
+    /** Stores the value of the dice. */
+    int mDice;
+
+    /** Stores the number of players on the board. */
+    int mPlayersCnt;
+
+    /**
+     * Stores the size of the board, so the count of fields that are shared
+     * among all players.
+     */
+    int mBoardSize;
+
+    /** Stores the number of figures per player. */
+    int mTotalFigures;
+
+    /** Stores the number of all fields on the board including the bar. */
+    int mFieldsCnt;
+
+    /**
+     * Stores the gap between adjacent players, so the count of fields
+     * between the starting points of two adjacent players.
+     */
+    int mGap;
+
+    std::vector<int> mFiguresOffBoard;
+    std::vector<std::vector<int> > mFiguresOnField;
+
+    Board& capture(const playerId player, const int field);
 };
 
 } // namespace ReniMadden

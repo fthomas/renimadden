@@ -16,7 +16,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <ostream>
+#include <stdexcept>
 
 #include "move.h"
 
@@ -25,32 +25,32 @@ namespace ReniMadden
 
 Move::Move()
 {
-    start = 0;
-    end = 0;
+    mStartField = 0;
+    mEndField = 0;
 }
 
-Move::Move(const int _start, const int _end)
+Move::Move(const int start, const int end)
 {
-    if (_start >= _end) {
+    if (start >= end) {
         throw std::logic_error("Move::Move(): start is greater than end");
     }
 
-    if (_start < 0) {
+    if (start < 0) {
         throw std::out_of_range("Move::Move(): start is negative");
     }
 
-    start = _start;
-    end = _end;
+    mStartField = start;
+    mEndField = end;
 }
 
 int Move::getStartField() const
 {
-    return start;
+    return mStartField;
 }
 
 int Move::getEndField() const
 {
-    return end;
+    return mEndField;
 }
 
 bool operator==(const Move& a, const Move& b)

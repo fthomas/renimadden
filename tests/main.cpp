@@ -20,6 +20,8 @@
 
 #include "boardtest.h"
 
+using namespace ReniMadden;
+
 int main(int argc, char* argv[])
 {
     CppUnit::TextUi::TestRunner runner;

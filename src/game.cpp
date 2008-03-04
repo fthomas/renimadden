@@ -84,6 +84,18 @@ Game& Game::playUnattended()
     return *this;
 }
 
+Game& Game::addListener(const Listener& listener)
+{
+    mListeners.push_back(listener);
+    return *this;
+}
+
+Game& Game::removeListener(const Listener& listener)
+{
+    mListeners.remove(listener);
+    return *this;
+}
+
 Game& Game::diceRolledInform(const int dice)
 {
     std::list<Listener>::iterator it;

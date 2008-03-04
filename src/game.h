@@ -33,6 +33,8 @@ class Game
 public:
     Game(Board& board);
     Game& playUnattended();
+    Game& addListener(const Listener& listener);
+    Game& removeListener(const Listener& listener);
 
 private:
     Board mBoard;

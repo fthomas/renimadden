@@ -30,40 +30,30 @@ namespace ReniMadden
 
 class Board
 {
+    friend class BoardTest;
+
 public:
-    Board(const int players = 4, const int size = 48,
-          const int figurespp = 4);
+    Board(const int players = 4, const int size = 48, const int figurespp = 4);
     Board& reset();
+    bool isSane() const;
 
     Board& rollDice();
     int getDice() const;
-    Board& setDice(const int value);
 
     int getPlayersCnt() const;
-
     int getFiguresOffBoard(const playerId player) const;
-    Board& addFiguresOffBoard(const playerId player, const int figures);
-    Board& setFiguresOffBoard(const playerId player, const int figures);
-
     int getFiguresOnField(const playerId player, const int field) const;
-    Board& addFiguresOnField(const playerId player, const int field,
-                             const int figures);
-    Board& setFiguresOnField(const playerId player, const int field,
-                             const int figures);
-
     int getOpponentField(const playerId player, const playerId opponent,
                          const int field) const;
 
-    bool isSane() const;
     bool isWinner(const playerId player) const;
     bool hasWinner() const;
 
     std::list<Move>& getPossibleMoves(const playerId player) const;
-    std::list<Move>& getCapturingMoves(const playerId player,
-                                       const std::list<Move>& moves) const;
     bool canMove(const playerId player) const;
     bool canEscape(const playerId player) const;
     bool needsToEscape(const playerId player) const;
+    bool isFieldOccupied(const playerId player, const int field) const;
     bool isSliceOccupied(const playerId player, const int start,
                          const int end) const;
     bool isMoveAllowed(const playerId player, const Move& move) const;
@@ -98,6 +88,18 @@ private:
     std::vector<int> mFiguresOffBoard;
     std::vector<std::vector<int> > mFiguresOnField;
 
+    Board& setDice(const int value);
+
+    Board& setFiguresOffBoard(const playerId player, const int figures);
+    Board& addFiguresOffBoard(const playerId player, const int figures);
+
+    Board& setFiguresOnField(const playerId player, const int field,
+                             const int figures);
+    Board& addFiguresOnField(const playerId player, const int field,
+                             const int figures);
+
+    std::list<Move>& getCapturingMoves(const playerId player,
+                                       const std::list<Move>& moves) const;
     Board& capture(const playerId player, const int field);
 };
 

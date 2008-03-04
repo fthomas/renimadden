@@ -34,11 +34,9 @@ Move::Move(const int start, const int end)
     if (start >= end) {
         throw std::logic_error("Move::Move(): start is greater than end");
     }
-
     if (start < 0) {
         throw std::out_of_range("Move::Move(): start is negative");
     }
-
     mStartField = start;
     mEndField = end;
 }

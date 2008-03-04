@@ -27,11 +27,11 @@
 #include "playerid.h"
 
 using namespace std;
-using namespace ReniMadden;
+
+namespace ReniMadden {
 
 class BoardTest : public CppUnit::TestFixture
 {
-
     CPPUNIT_TEST_SUITE(BoardTest);
     CPPUNIT_TEST(testDice);
     CPPUNIT_TEST(testMovesBoard);
@@ -115,6 +115,8 @@ public:
 
     void testGetOpponentField() {
         board->reset();
+        CPPUNIT_ASSERT(board->getOpponentField(PLAYER1, PLAYER1, 1) == 1);
+
         CPPUNIT_ASSERT(board->getOpponentField(PLAYER1, PLAYER2, 1) == 37);
         CPPUNIT_ASSERT(board->getOpponentField(PLAYER1, PLAYER3, 1) == 25);
         CPPUNIT_ASSERT(board->getOpponentField(PLAYER1, PLAYER4, 1) == 13);
@@ -132,6 +134,8 @@ public:
         board->reset();
         board->setFiguresOnField(PLAYER1, 46, 1);
         board->setFiguresOnField(PLAYER1, 47, 1);
+        CPPUNIT_ASSERT(board->isFieldOccupied(PLAYER1, 46) == true);
+        CPPUNIT_ASSERT(board->isFieldOccupied(PLAYER1, 47) == true);
         CPPUNIT_ASSERT(board->isSliceOccupied(PLAYER1, 46, 47) == true);
         board->setFiguresOnField(PLAYER1, 48, 1);
         CPPUNIT_ASSERT(board->isSliceOccupied(PLAYER1, 46, 48) == true);
@@ -169,10 +173,13 @@ public:
         pm.push_back(Move(2, 8));
         cm.push_back(Move(1, 7));
 
-        CPPUNIT_ASSERT(board->getPossibleMoves(PLAYER1) == pm);
+        // getPossibleMoves() implements the "Schlagzwang" rule.
+        CPPUNIT_ASSERT(board->getPossibleMoves(PLAYER1) == cm);
         CPPUNIT_ASSERT(board->getCapturingMoves(PLAYER1, pm) == cm);
     }
 };
+
+} // namespace ReniMadden
 
 #endif // BOARDTEST_H
 

@@ -142,6 +142,10 @@ Board& Board::setFiguresOnField(const playerId player, const int field,
 int Board::getOpponentField(const playerId player, const playerId opponent,
                             const int field) const
 {
+    if (field > mBoardSize) {
+        throw std::logic_error("Board::getOpponentField(): requested "
+                               "opponent field of own bar field");
+    }
     int dist_opp = field + (player - opponent) * mGap;
     return (dist_opp < 0 ? dist_opp + mBoardSize : dist_opp) % mBoardSize;
 }
@@ -281,17 +285,9 @@ std::list<Move>& Board::getCapturingMoves(const playerId player,
     std::list<Move>::const_iterator it;
 
     for (it = moves.begin(); it != moves.end(); ++it) {
-        for (int i = 0; i < mPlayersCnt; i++) {
-            playerId opponent = (playerId) i;
-            if (opponent == player) {
-                continue;
-            }
-
-            int end_field = (*it).getEndField();
-            int opp_field = getOpponentField(player, opponent, end_field);
-            if (getFiguresOnField(opponent, opp_field) > 0) {
-                capturingMoves->push_back(*it);
-            }
+        int end = (*it).getEndField();
+        if (end < mBoardSize && isFieldOccupied(player, end)) {
+            capturingMoves->push_back(*it);
         }
     }
     return *capturingMoves;
@@ -313,6 +309,18 @@ bool Board::needsToEscape(const playerId player) const
     for (int i = 0; i < mTotalFigures; i++) {
         if (getFiguresOffBoard(player) == mTotalFigures - i
                 && isSliceOccupied(player, mFieldsCnt - i, mFieldsCnt - 1)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Board::isFieldOccupied(const playerId player, const int field) const
+{
+    for (int i = 0; i < mPlayersCnt; i++) {
+        playerId other_player = (playerId) i;
+        int other_field = getOpponentField(player, other_player, field);
+        if (getFiguresOnField(other_player, other_field) > 0) {
             return true;
         }
     }

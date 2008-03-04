@@ -2,12 +2,12 @@ SET(renimadden_SOURCES
     main.cpp
     board.cpp
     game.cpp
-    listener.cpp
     move.cpp
 )
 
 SET(renimadden_HEADERS
     board.h
+    boardinfo.h
     game.h
     listener.h
     move.h

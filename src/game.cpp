@@ -29,11 +29,13 @@ Game::Game(Board& board)
 {
     mBoard = board;
     mActiveId = PLAYER1;
-    mListeners = std::list<Listener>();
+    mListeners = std::list<Listener*>();
 }
 
 Game& Game::playUnattended()
 {
+    BoardInfo board_info = BoardInfo();
+
     // Play as long as the board has no winner.
     while (! mBoard.hasWinner()) {
         if (mBoard.needsToEscape(mActiveId)) {
@@ -52,6 +54,7 @@ Game& Game::playUnattended()
         }
 
         std::list<Move> pm = std::list<Move>();
+        Move move;
 
         while (mBoard.rollDice().getDice() == 6) {
             if (mBoard.canEscape(mActiveId)) {
@@ -59,13 +62,17 @@ Game& Game::playUnattended()
             }
             pm = mBoard.getPossibleMoves(mActiveId);
             if (! pm.empty()) {
-                mBoard.move(mActiveId, pm.front());
+                move = pm.front();
+                mBoard.move(mActiveId, move);
+                figureMovedInform(board_info, move);
             }
         }
 
         pm = mBoard.getPossibleMoves(mActiveId);
         if (! pm.empty()) {
-            mBoard.move(mActiveId, pm.front());
+            move = pm.front();
+            mBoard.move(mActiveId, move);
+            figureMovedInform(board_info, move);
         } else {
             nextPlayer();
             continue;
@@ -84,13 +91,13 @@ Game& Game::playUnattended()
     return *this;
 }
 
-Game& Game::addListener(const Listener& listener)
+Game& Game::addListener(Listener* listener)
 {
     mListeners.push_back(listener);
     return *this;
 }
 
-Game& Game::removeListener(const Listener& listener)
+Game& Game::removeListener(Listener* listener)
 {
     mListeners.remove(listener);
     return *this;
@@ -98,27 +105,36 @@ Game& Game::removeListener(const Listener& listener)
 
 Game& Game::diceRolledInform(const int dice)
 {
-    std::list<Listener>::iterator it;
+    std::list<Listener*>::iterator it;
     for (it = mListeners.begin(); it != mListeners.end(); ++it) {
-        (*it).diceRolled(dice);
+        (*it)->diceRolled(dice);
     }
     return *this;
 }
 
 Game& Game::playerChangedInform(const playerId player)
 {
-    std::list<Listener>::iterator it;
+    std::list<Listener*>::iterator it;
     for (it = mListeners.begin(); it != mListeners.end(); ++it) {
-        (*it).playerChanged(player);
+        (*it)->playerChanged(player);
+    }
+    return *this;
+}
+
+Game& Game::figureMovedInform(const BoardInfo& info, const Move& move)
+{
+    std::list<Listener*>::iterator it;
+    for (it = mListeners.begin(); it != mListeners.end(); ++it) {
+        (*it)->figureMoved(info, move);
     }
     return *this;
 }
 
 Game& Game::gameEndedWithWinnerInform(const playerId player)
 {
-    std::list<Listener>::iterator it;
+    std::list<Listener*>::iterator it;
     for (it = mListeners.begin(); it != mListeners.end(); ++it) {
-        (*it).gameEndedWithWinner(player);
+        (*it)->gameEndedWithWinner(player);
     }
     return *this;
 }

@@ -18,17 +18,28 @@
 
 #include <ncurses.h>
 
+#include "board.h"
 #include "game.h"
+
+#include "curseslistener.h"
 
 using namespace ReniMadden;
 
 int main(int argc, char* argv[])
 {
-    initscr();
-    printw("TEST");
-    refresh();
-    getch();
-    endwin();
+    //initscr();
+
+    Board board = Board();
+    Game game = Game(board);
+    CursesListener* clistener = new CursesListener();
+
+    game.addListener(clistener);
+    game.playUnattended();
+
+    //printw("TEST");
+    //refresh();
+    //getch();
+    //endwin();
     return 0;
 }
 

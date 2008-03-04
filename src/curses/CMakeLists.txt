@@ -1,5 +1,9 @@
 SET(crenimadden_SOURCES
     main.cpp
+    curseslistener.cpp
+    ../board.cpp
+    ../game.cpp
+    ../move.cpp
 )
 
 SET(crenimadden_HEADERS

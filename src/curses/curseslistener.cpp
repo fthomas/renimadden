@@ -16,14 +16,31 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "listener.h"
+#include <ncurses.h>
+#include <iostream>
+#include "curseslistener.h"
 
 namespace ReniMadden
 {
 
-bool operator==(const Listener& a, const Listener& b)
+void CursesListener::diceRolled(const int dice)
 {
-    return &a == &b;
+    std::cout << "1";
+}
+
+void CursesListener::playerChanged(const playerId player)
+{
+    std::cout << "2";
+}
+
+void CursesListener::figureMoved(const BoardInfo& info, const Move& move)
+{
+    std::cout << "3";
+}
+
+void CursesListener::gameEndedWithWinner(const playerId player)
+{
+    std::cout << "4";
 }
 
 } // namespace ReniMadden

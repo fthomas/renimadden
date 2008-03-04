@@ -28,7 +28,8 @@
 
 using namespace std;
 
-namespace ReniMadden {
+namespace ReniMadden
+{
 
 class BoardTest : public CppUnit::TestFixture
 {

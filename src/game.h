@@ -22,6 +22,7 @@
 #include <list>
 
 #include "board.h"
+#include "boardinfo.h"
 #include "listener.h"
 #include "playerid.h"
 
@@ -33,16 +34,17 @@ class Game
 public:
     Game(Board& board);
     Game& playUnattended();
-    Game& addListener(const Listener& listener);
-    Game& removeListener(const Listener& listener);
+    Game& addListener(Listener* listener);
+    Game& removeListener(Listener* listener);
 
 private:
     Board mBoard;
     playerId mActiveId;
-    std::list<Listener> mListeners;
+    std::list<Listener*> mListeners;
 
     Game& diceRolledInform(const int dice);
     Game& playerChangedInform(const playerId player);
+    Game& figureMovedInform(const BoardInfo& info, const Move& move);
     Game& gameEndedWithWinnerInform(const playerId player);
     playerId nextPlayer();
 };

@@ -1,4 +1,6 @@
 Coding Style
 ============
 
-http://techbase.kde.org/index.php?title=Policies/Kdelibs_Coding_Style
+ReniMadden's coding style is (mostly) based on:
+  * http://www.possibility.com/Cpp/CppCodingStandard.html
+  * http://techbase.kde.org/index.php?title=Policies/Kdelibs_Coding_Style

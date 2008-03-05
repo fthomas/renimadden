@@ -41,6 +41,7 @@ public:
     int getDice() const;
 
     int getPlayersCnt() const;
+    int getBoardSize() const;
     int getFiguresOffBoard(const playerId player) const;
     int getFiguresOnField(const playerId player, const int field) const;
     int getOpponentField(const playerId player, const playerId opponent,

@@ -32,13 +32,13 @@ namespace ReniMadden
 class Game
 {
 public:
-    Game(Board& board);
+    Game(Board* board);
     Game& playUnattended();
     Game& addListener(Listener* listener);
     Game& removeListener(Listener* listener);
 
 private:
-    Board mBoard;
+    Board* mBoard;
     playerId mActiveId;
     std::list<Listener*> mListeners;
 

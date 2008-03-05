@@ -27,7 +27,7 @@ using namespace ReniMadden;
 int main(int argc, char* argv[])
 {
     Board board = Board();
-    Game game = Game(board);
+    Game game = Game(&board);
 
     game.playUnattended();
 

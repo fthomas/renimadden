@@ -25,7 +25,7 @@ using namespace std;
 namespace ReniMadden
 {
 
-Game::Game(Board& board)
+Game::Game(Board* board)
 {
     mBoard = board;
     mActiveId = PLAYER1;
@@ -35,54 +35,60 @@ Game::Game(Board& board)
 Game& Game::playUnattended()
 {
     BoardInfo board_info = BoardInfo();
+    playerChangedInform(mActiveId);
 
     // Play as long as the board has no winner.
-    while (! mBoard.hasWinner()) {
-        if (mBoard.needsToEscape(mActiveId)) {
+    while (! mBoard->hasWinner()) {
+        if (mBoard->needsToEscape(mActiveId)) {
             for (int i = 0; i < 3; i++) {
-                mBoard.rollDice();
-                diceRolledInform(mBoard.getDice());
-                if (mBoard.getDice() == 6) {
-                    mBoard.escape(mActiveId);
+                mBoard->rollDice();
+                diceRolledInform(mBoard->getDice());
+                if (mBoard->getDice() == 6) {
+                    mBoard->escape(mActiveId);
+                    figureMovedInform(board_info, Move(0, 1));
                     break;
                 }
             }
-            if (mBoard.getDice() != 6) {
+            if (mBoard->getDice() != 6) {
                 nextPlayer();
                 continue;
             }
         }
 
         std::list<Move> pm = std::list<Move>();
-        Move move;
 
-        while (mBoard.rollDice().getDice() == 6) {
-            if (mBoard.canEscape(mActiveId)) {
-                mBoard.escape(mActiveId);
+        mBoard->rollDice();
+        diceRolledInform(mBoard->getDice());
+
+        while (mBoard->getDice() == 6) {
+            if (mBoard->canEscape(mActiveId)) {
+                mBoard->escape(mActiveId);
+                figureMovedInform(board_info, Move(0, 1));
+            } else {
+                pm = mBoard->getPossibleMoves(mActiveId);
+                if (! pm.empty()) {
+                    mBoard->move(mActiveId, pm.back());
+                    figureMovedInform(board_info, pm.back());
+                }
             }
-            pm = mBoard.getPossibleMoves(mActiveId);
-            if (! pm.empty()) {
-                move = pm.front();
-                mBoard.move(mActiveId, move);
-                figureMovedInform(board_info, move);
-            }
+            mBoard->rollDice();
+            diceRolledInform(mBoard->getDice());
         }
 
-        pm = mBoard.getPossibleMoves(mActiveId);
+        pm = mBoard->getPossibleMoves(mActiveId);
         if (! pm.empty()) {
-            move = pm.front();
-            mBoard.move(mActiveId, move);
-            figureMovedInform(board_info, move);
+            mBoard->move(mActiveId, pm.back());
+            figureMovedInform(board_info, pm.back());
         } else {
             nextPlayer();
             continue;
         }
 
-        if (! mBoard.isSane()) {
+        if (! mBoard->isSane()) {
             throw std::logic_error("Game::playUnattended(): board is insane");
         }
 
-        if (mBoard.isWinner(mActiveId)) {
+        if (mBoard->isWinner(mActiveId)) {
             gameEndedWithWinnerInform(mActiveId);
             return *this;
         }
@@ -141,7 +147,7 @@ Game& Game::gameEndedWithWinnerInform(const playerId player)
 
 playerId Game::nextPlayer()
 {
-    int playersCnt = mBoard.getPlayersCnt();
+    int playersCnt = mBoard->getPlayersCnt();
     mActiveId = (playerId)((mActiveId + 1) % playersCnt);
     playerChangedInform(mActiveId);
     return mActiveId;

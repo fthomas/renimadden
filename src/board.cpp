@@ -83,6 +83,11 @@ int Board::getPlayersCnt() const
     return mPlayersCnt;
 }
 
+int Board::getBoardSize() const
+{
+    return mBoardSize;
+}
+
 int Board::getFiguresOffBoard(const playerId player) const
 {
     return mFiguresOffBoard[player];

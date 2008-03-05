@@ -1,6 +1,9 @@
 
-                     0  0  0
-      A: a  a        0  1  0    B:  b  b
+   ReniMadden curses interface
+   ===========================
+
+                     0  0  0                     Active player: A
+      A: a  a        0  1  0     B: b  b         Dice value: 0
          a  a        0  2  0        b  b
                      0  3  0
                      0  4  0

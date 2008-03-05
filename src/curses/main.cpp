@@ -27,19 +27,22 @@ using namespace ReniMadden;
 
 int main(int argc, char* argv[])
 {
-    //initscr();
+    initscr();
+    noecho();
+    nodelay(stdscr, TRUE);
+    keypad(stdscr, TRUE);
 
     Board board = Board();
-    Game game = Game(board);
-    CursesListener* clistener = new CursesListener();
+    Game game = Game(&board);
+    CursesListener* clistener = new CursesListener(&board);
 
     game.addListener(clistener);
     game.playUnattended();
 
-    //printw("TEST");
-    //refresh();
-    //getch();
-    //endwin();
+    nodelay(stdscr, FALSE);
+    getch();
+    endwin();
+
     return 0;
 }
 

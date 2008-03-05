@@ -1,6 +1,6 @@
 /*
    ReniMadden - Mensch ärgere dich nicht for KDE
-   Copyright © 2007-2008 Frank S. Thomas <frank@thomas-alfeld.de>
+   Copyright © 2008 Frank S. Thomas <frank@thomas-alfeld.de>
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #ifndef BOARD_INFO_H
 #define BOARD_INFO_H
 
-namespace ReniMadden 
+namespace ReniMadden
 {
 
 class BoardInfo

@@ -19,6 +19,7 @@
 #ifndef CURSES_LISTENER_H
 #define CURSES_LISTENER_H
 
+#include "board.h"
 #include "listener.h"
 
 namespace ReniMadden
@@ -27,10 +28,27 @@ namespace ReniMadden
 class CursesListener : public Listener
 {
 public:
+    CursesListener(Board* board);
+
     void diceRolled(const int dice);
     void playerChanged(const playerId player);
     void figureMoved(const BoardInfo& info, const Move& move);
     void gameEndedWithWinner(const playerId player);
+
+private:
+    Board* mBoard;
+    int cy;
+    int cx;
+    uint mWait;
+    std::vector<std::vector<int> > mField;
+
+    void drawBoard();
+    void refreshBoard();
+    void refreshOffBoard();
+    void drawOffBoard(const int y, const int x, const playerId player);
+    void refreshBar();
+    void refreshAll();
+
 };
 
 } // namespace ReniMadden
